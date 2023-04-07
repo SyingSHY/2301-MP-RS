@@ -6,9 +6,11 @@ import android.graphics.Canvas;
 import androidx.core.content.ContextCompat;
 
 import com.example.roguelikesurvival.GameLoop;
-import com.example.roguelikesurvival.Joystick;
+import com.example.roguelikesurvival.Camera;
+import com.example.roguelikesurvival.gamepanel.Joystick;
 import com.example.roguelikesurvival.R;
 import com.example.roguelikesurvival.Utils;
+import com.example.roguelikesurvival.gamepanel.HealthBar;
 
 public class Player extends Circle {
     public static final double SPEED_PIXELS_PER_SECOND = 400.0;
@@ -40,9 +42,9 @@ public class Player extends Circle {
         }
     }
 
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
-        healthBar.draw(canvas);
+    public void draw(Canvas canvas, Camera camera) {
+        super.draw(canvas, camera);
+        healthBar.draw(canvas, camera);
     }
 
     public int getHealthPoint() {

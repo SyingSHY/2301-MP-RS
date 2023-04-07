@@ -10,7 +10,7 @@ public class GameLoop extends Thread {
     private static final double UPS_PERIOD = 1E+3 / MAX_UPS;
     private Game game;
     private SurfaceHolder surfaceHolder;
-    private boolean isRuning = false;
+    private boolean isRunning = false;
     private double averageUPS;
     private double averageFPS;
 
@@ -28,7 +28,7 @@ public class GameLoop extends Thread {
     }
 
     public void startLoop() {
-        isRuning = true;
+        isRunning = true;
         start();
     }
 
@@ -45,7 +45,7 @@ public class GameLoop extends Thread {
 
         Canvas canvas = null;
         startTime = System.currentTimeMillis();
-        while (isRuning) {
+        while (isRunning) {
 
             try {
                 canvas = surfaceHolder.lockCanvas();
@@ -94,6 +94,15 @@ public class GameLoop extends Thread {
                 frameCount = 0;
                 startTime = System.currentTimeMillis();
             }
+        }
+    }
+
+    public void stopLoop() {
+        isRunning = false;
+        try {
+            join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -2,6 +2,8 @@ package com.example.roguelikesurvival.object;
 
 import android.graphics.Canvas;
 
+import com.example.roguelikesurvival.Camera;
+
 public abstract class GameObject {
     protected double positionX;
     protected double positionY;
@@ -16,7 +18,7 @@ public abstract class GameObject {
         this.positionY = positionY;
     }
 
-    public abstract void draw(Canvas canvas);
+    public abstract void draw(Canvas canvas, Camera camera);
 
     public abstract void update();
 
@@ -26,11 +28,11 @@ public abstract class GameObject {
                 Math.pow(obj2.getPositionY() - obj1.getPositionY(), 2));
     }
 
-    protected double getPositionX() {
+    public double getPositionX() {
         return positionX;
     }
 
-    protected double getPositionY() {
+    public double getPositionY() {
         return positionY;
     }
 

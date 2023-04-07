@@ -1,15 +1,18 @@
 package com.example.roguelikesurvival;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 
+import com.example.roguelikesurvival.gamepanel.GameOver;
+import com.example.roguelikesurvival.gamepanel.Joystick;
+import com.example.roguelikesurvival.gamepanel.Performance;
 import com.example.roguelikesurvival.object.Circle;
 import com.example.roguelikesurvival.object.Enemy;
 import com.example.roguelikesurvival.object.Player;
@@ -27,9 +30,15 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private List<Spell> spellList = new ArrayList<Spell>();
     private int joystckPointerId = 0;
     private int numberOfSpellsToCast = 0;
+    private GameOver gameOver;
+    private Performance performance;
+    private Camera camera;
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
+        if (gameLoop.getState().equals(Thread.State.TERMINATED)) {
+            gameLoop = new GameLoop(this, surfaceHolder);
+        }
         gameLoop.startLoop();
     }
 
@@ -51,9 +60,18 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         gameLoop = new GameLoop(this, surfaceHolder);
 
-        //game objects 초기설정
+        //게임 패널 초기화
+        performance = new Performance(context, gameLoop);
         joystick = new Joystick(170, 800, 100, 60);
+        gameOver = new GameOver(context);
+
+        //오브젝트 초기설정
         player = new Player(getContext(), joystick, 500, 500, 30);
+
+        //카메라 시점을 플레이어가 중앙에 오게 설정
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics((displayMetrics));
+        camera = new Camera(displayMetrics.widthPixels, displayMetrics.heightPixels, player);
 
         setFocusable(true);
     }
@@ -94,38 +112,34 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        drawUPS(canvas);
-        drawFPS(canvas);
 
-        joystick.draw(canvas);
-        player.draw(canvas);
+        //오브젝트 그리기
+        player.draw(canvas, camera);
+
         for (Enemy enemy : enemyList) {
-            enemy.draw(canvas);
+            enemy.draw(canvas, camera);
         }
+
         for (Spell spell : spellList) {
-            spell.draw(canvas);
+            spell.draw(canvas, camera);
         }
-    }
 
-    public void drawUPS(Canvas canvas) {
-        String averageUPS = Double.toString(gameLoop.getAverageUPS());
-        Paint paint = new Paint();
-        int color = ContextCompat.getColor(getContext(), R.color.magenta);
-        paint.setColor(color);
-        paint.setTextSize(50);
-        canvas.drawText("UPS: " + averageUPS, 100, 100, paint);
-    }
+        // 게임패널 그리기
+        joystick.draw(canvas);
+        performance.draw(canvas);
 
-    public void drawFPS(Canvas canvas) {
-        String averageFPS = Double.toString(gameLoop.getAverageFPS());
-        Paint paint = new Paint();
-        int color = ContextCompat.getColor(getContext(), R.color.magenta);
-        paint.setColor(color);
-        paint.setTextSize(50);
-        canvas.drawText("FPS: " + averageFPS, 100, 200, paint);
+        //게임이 종료되면 종료화면 출력
+        if (player.getHealthPoint() <= 0) {
+            gameOver.draw(canvas);
+        }
     }
 
     public void update() {
+
+        if (player.getHealthPoint() <= 0) {
+            return;
+        }
+
         joystick.update();
         player.update();
 
@@ -168,6 +182,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
         }
+        camera.update();
+    }
+
+    public void pause() {
+        gameLoop.stopLoop();
     }
 }
 
