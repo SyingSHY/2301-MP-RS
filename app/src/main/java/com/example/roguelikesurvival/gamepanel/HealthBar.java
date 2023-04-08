@@ -33,7 +33,7 @@ public class HealthBar {
     public void draw(Canvas cansvas, Camera camera) {
         float x = (float) player.getPositionX();
         float y = (float) player.getPositionY();
-        float distanceToPlayer = 50;
+        float distanceToPlayer = 95;
         float healthPointPercentage = (float) player.getHealthPoint() / player.MAX_HEALTH_POINT;
 
         //border 그리기

@@ -43,4 +43,10 @@ public abstract class GameObject {
     protected double getDirectionY() {
         return directionY;
     }
+
+    public enum MoveState {
+        NOT_MOVING,
+        STARTED_MOVING,
+        IS_MOVING
+    }
 }
