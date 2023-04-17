@@ -26,7 +26,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private GameLoop gameLoop;
     private final Player player;
     private final Joystick joystick;
-    private List<Enemy> enemyList = new ArrayList<Enemy>();
+    public static List<Enemy> enemyList = new ArrayList<Enemy>();
     private List<Spell> spellList = new ArrayList<Spell>();
     private int joystckPointerId = 0;
     private int numberOfSpellsToCast = 0;
@@ -187,6 +187,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     public void pause() {
         gameLoop.stopLoop();
+    }
+
+    public List<Enemy> getEnemyList() {
+        return enemyList;
     }
 }
 
