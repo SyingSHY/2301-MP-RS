@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -33,6 +34,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private int numberOfSpellsToCast = 0;
     private Performance performance;
     private Camera camera;
+    private Background background;
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
@@ -67,6 +69,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         //오브젝트 초기설정
         player = new Player(getContext(), joystick, 500, 500, 30);
+
+        //배경 설정
+        background = new Background(context);
 
         //카메라 시점을 플레이어가 중앙에 오게 설정
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -113,6 +118,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
 
+        //배경 그리기
+        background.draw(canvas, camera);
+
         //오브젝트 그리기
         player.draw(canvas, camera);
 
@@ -133,8 +141,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-
-
 
         joystick.update();
         player.update();
