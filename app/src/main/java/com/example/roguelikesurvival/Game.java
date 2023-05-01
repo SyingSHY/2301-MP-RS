@@ -8,10 +8,10 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.example.roguelikesurvival.gamepanel.InfiniteBackground;
 import com.example.roguelikesurvival.gamepanel.Joystick;
 import com.example.roguelikesurvival.gamepanel.Performance;
 import com.example.roguelikesurvival.gamepanel.ReStart;
@@ -34,7 +34,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private int numberOfSpellsToCast = 0;
     private Performance performance;
     private Camera camera;
-    private Background background;
+    private InfiniteBackground background;
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
@@ -71,7 +71,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         player = new Player(getContext(), joystick, 500, 500, 30);
 
         //배경 설정
-        background = new Background(context);
+        background = new InfiniteBackground(context, player);
 
         //카메라 시점을 플레이어가 중앙에 오게 설정
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -146,7 +146,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         player.update();
 
         if (Enemy.readyToSpawn()) {
-            enemyList.add(new Enemy(getContext(), player));
+            enemyList.add(new Enemy(getContext(), player, camera));
         }
 
         while (numberOfSpellsToCast > 0) {
@@ -190,6 +190,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             checkHP();
         }
 
+        background.update(camera);
     }
 
     public void checkHP(){

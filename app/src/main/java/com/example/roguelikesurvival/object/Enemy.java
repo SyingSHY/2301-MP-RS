@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
+import com.example.roguelikesurvival.Camera;
 import com.example.roguelikesurvival.Game;
 import com.example.roguelikesurvival.GameLoop;
 import com.example.roguelikesurvival.R;
@@ -30,7 +31,7 @@ public class Enemy extends Circle {
         this.player = player;
     }
 
-    public Enemy(Context context, Player player) {
+    public Enemy(Context context, Player player, Camera camera) {
         super(context, ContextCompat.getColor(context, R.color.enemy), Math.random() * 1000, Math.random() * 1000, 30);
         this.player = player;
     }
