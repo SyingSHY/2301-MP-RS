@@ -3,6 +3,7 @@ package com.example.roguelikesurvival.gamepanel;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.widget.Chronometer;
 
 import androidx.core.content.ContextCompat;
 
@@ -16,6 +17,7 @@ public class Performance {
     public Performance(Context context, GameLoop gameLoop) {
         this.context = context;
         this.gameLoop = gameLoop;
+
     }
 
     public void draw(Canvas canvas) {

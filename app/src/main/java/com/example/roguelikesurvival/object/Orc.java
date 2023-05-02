@@ -6,8 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 
-import androidx.core.content.ContextCompat;
-
 import com.example.roguelikesurvival.Camera;
 import com.example.roguelikesurvival.Game;
 import com.example.roguelikesurvival.GameLoop;
@@ -15,13 +13,13 @@ import com.example.roguelikesurvival.R;
 
 import java.util.List;
 
-public class Goblin extends Enemy {
+public class Orc extends Enemy {
     private static final double SPEED_PIXELS_PER_SECOND = Player.SPEED_PIXELS_PER_SECOND * 0.4;
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
     private static final double AVOID_POWER = 5;
 
     //SPAWM_PER_MINUTE 분당 스폰할 적 수 설정
-    private static final double SPAWN_PER_MINUTE = 30;
+    private static final double SPAWN_PER_MINUTE = 15;
     private static final double SPAWN_PER_SECOND = SPAWN_PER_MINUTE / 60.0;
     private static final double UPDATE_PER_SPAWN = GameLoop.MAX_UPS / SPAWN_PER_SECOND;
     private static double updateUntilNextSpawn = UPDATE_PER_SPAWN;
@@ -36,16 +34,16 @@ public class Goblin extends Enemy {
     private int updateBeforeNextMove = 5;
     private int moveIdx = 0;
 
-    public Goblin(Context context, Player player, Camera camera) {
+    public Orc(Context context, Player player, Camera camera) {
         super(context, player, camera);
         this.player = player;
 
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
         bitmapOptions.inScaled = false;
-        bitmap[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.goblin_run_anim_f0, bitmapOptions);
-        bitmap[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.goblin_run_anim_f1, bitmapOptions);
-        bitmap[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.goblin_run_anim_f2, bitmapOptions);
-        bitmap[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.goblin_run_anim_f3, bitmapOptions);
+        bitmap[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.orc_warrior_run_anim_f0, bitmapOptions);
+        bitmap[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.orc_warrior_run_anim_f1, bitmapOptions);
+        bitmap[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.orc_warrior_run_anim_f2, bitmapOptions);
+        bitmap[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.orc_warrior_run_anim_f3, bitmapOptions);
 
         Matrix matrix = new Matrix();
         matrix.preScale(-1, 1);
