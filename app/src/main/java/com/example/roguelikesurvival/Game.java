@@ -15,13 +15,12 @@ import com.example.roguelikesurvival.gamepanel.InfiniteBackground;
 import com.example.roguelikesurvival.gamepanel.Joystick;
 import com.example.roguelikesurvival.gamepanel.Performance;
 import com.example.roguelikesurvival.gamepanel.ReStart;
-import com.example.roguelikesurvival.object.Circle;
+import com.example.roguelikesurvival.gamepanel.GameTimer;
 import com.example.roguelikesurvival.object.Enemy;
 import com.example.roguelikesurvival.object.Player;
 import com.example.roguelikesurvival.object.Spell;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
@@ -29,12 +28,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final Player player;
     private final Joystick joystick;
     public static List<Enemy> enemyList = new ArrayList<Enemy>();
-    private List<Spell> spellList = new ArrayList<Spell>();
+    public List<Spell> spellList = new ArrayList<Spell>();
     private int joystckPointerId = 0;
-    private int numberOfSpellsToCast = 0;
+    public int numberOfSpellsToCast = 0;
     private Performance performance;
     private Camera camera;
     private InfiniteBackground background;
+    private EnemySpawn enemySpawn;
+    private GameTimer gameTimer;
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
@@ -62,6 +63,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         gameLoop = new GameLoop(this, surfaceHolder);
 
+        //시간 설정
+        gameTimer = new GameTimer(context);
+
         //게임 패널 초기화
         performance = new Performance(context, gameLoop);
         joystick = new Joystick(170, 800, 100, 60);
@@ -69,6 +73,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         //오브젝트 초기설정
         player = new Player(getContext(), joystick, 500, 500, 30);
+        enemySpawn = new EnemySpawn(this, player, camera, gameTimer);
 
         //배경 설정
         background = new InfiniteBackground(context, player);
@@ -134,9 +139,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         // 게임패널 그리기
         joystick.draw(canvas);
-        performance.draw(canvas);
 
-        //게임이 종료되면 종료화면 출력
+        //시간 출력
+        gameTimer.draw(canvas);
 
     }
 
@@ -145,59 +150,22 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick.update();
         player.update();
 
-        if (Enemy.readyToSpawn()) {
-            enemyList.add(new Enemy(getContext(), player, camera));
-        }
+        enemySpawn.update(camera);
 
-        while (numberOfSpellsToCast > 0) {
-            spellList.add(new Spell(getContext(), player));
-            numberOfSpellsToCast--;
-        }
-        for (Enemy enemy : enemyList) {
-            enemy.update();
-        }
-
-        for (Spell spell : spellList) {
-            spell.update();
-        }
-
-        //enemy와 player간의 충돌 체크
-        Iterator<Enemy> iteratorEnemy = enemyList.iterator();
-        while (iteratorEnemy.hasNext()) {
-            Circle enemy = iteratorEnemy.next();
-            if (Circle.isColliding(enemy, player)) {
-                iteratorEnemy.remove();
-
-                player.setHealthPoint(player.getHealthPoint() - 1);
-                continue;
-            }
-
-            //enemy와 spell간의 충돌 체크
-            Iterator<Spell> iteratorSpell = spellList.iterator();
-            while (iteratorSpell.hasNext()) {
-                Circle spell = iteratorSpell.next();
-
-                if (Circle.isColliding(spell, enemy)) {
-                    iteratorSpell.remove();
-                    iteratorEnemy.remove();
-                    break;
-                }
-            }
-        }
         camera.update();
 
-        if(player.getHealthPoint() <= 0){
+        if (player.getHealthPoint() <= 0) {
             checkHP();
         }
 
         background.update(camera);
     }
 
-    public void checkHP(){
+    public void checkHP() {
         if (player.getHealthPoint() <= 0) {
             Intent intent = new Intent(getContext(), ReStart.class);
             getContext().startActivity(intent);
-            ((Activity)getContext()).finish();
+            ((Activity) getContext()).finish();
         }
     }
 
