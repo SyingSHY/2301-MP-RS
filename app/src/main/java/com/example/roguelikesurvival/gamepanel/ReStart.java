@@ -19,8 +19,7 @@ public class ReStart extends AppCompatActivity{
     }
 
     public void restartGame(View view){
-        Intent intent = new Intent(this, StartUp.class);
-
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
 
         finish();
