@@ -17,8 +17,9 @@ public abstract class Enemy extends Circle {
 
 
     public Enemy(Context context, Player player, Camera camera) {
-        super(context, ContextCompat.getColor(context, R.color.enemy), Math.random() * 1000, Math.random() * 1000, 30);
-
+        super(context, ContextCompat.getColor(context, R.color.enemy),
+                player.getPositionX() + Math.cos(Math.random()*2*Math.PI)*((Math.random()*500)+2000),
+                player.getPositionY() + Math.cos(Math.random()*2*Math.PI)*((Math.random()*500)+2000), 30);
     }
 
     //설정한 시간간격마다 true를 return하여 스폰준비

@@ -19,8 +19,6 @@ public class EnemySpawn {
     private Player player;
     private Goblin goblin;
     private Orc orc;
-    private int spawnPositionX;
-    private int spawnPositionY;
 
     public EnemySpawn(Game game, Player player, Camera camera, GameTimer gameTimer) {
         this.game = game;
@@ -30,17 +28,6 @@ public class EnemySpawn {
         goblin = new Goblin(game.getContext(), player, camera);
         orc = new Orc((game.getContext()), player, camera);
     }
-
-//    public int getSpawnPositionX(Camera camera) {
-//        if (player.getDirectionX() > 0) {
-//            spawnPositionX = (int) camera.gameToScreenCoordinateX(player.getPositionX() + 1200);
-//        }
-//        return spawnPositionX;
-//    }
-//
-//    public int getSpawnPositionY(Camera camera) {
-//        return spawnPositionY;
-//    }
 
     public void update(Camera camera) {
         //고블린 스폰
