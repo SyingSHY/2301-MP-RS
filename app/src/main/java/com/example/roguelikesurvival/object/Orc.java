@@ -26,7 +26,7 @@ public class Orc extends Enemy {
     private static final float SPRITE_WIDTH = 95;
     private static final float SPRITE_HEIGHT = 95;
     private int healthPoint = 3;
-    private  boolean hitImage = false;
+    private boolean hitImage = false;
     private final Player player;
 
     private Bitmap[] bitmap = new Bitmap[4];
@@ -36,8 +36,8 @@ public class Orc extends Enemy {
     private int updateBeforeNextMove = 5;
     private int moveIdx = 0;
 
-    public Orc(Context context, Player player, Camera camera) {
-        super(context, player, camera);
+    public Orc(Context context, Player player, Camera camera, double spawnPositionX, double spawnPositionY) {
+        super(context, player, camera, spawnPositionX, spawnPositionY);
         this.player = player;
 
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
@@ -133,7 +133,8 @@ public class Orc extends Enemy {
     public boolean getHitImage() {
         return hitImage;
     }
-    public void setHitImage(boolean state){
+
+    public void setHitImage(boolean state) {
         hitImage = state;
     }
 

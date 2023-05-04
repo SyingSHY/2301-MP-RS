@@ -36,8 +36,8 @@ public class Imp extends Enemy {
     private int updateBeforeNextMove = 5;
     private int moveIdx = 0;
 
-    public Imp(Context context, Player player, Camera camera) {
-        super(context, player, camera);
+    public Imp(Context context, Player player, Camera camera, double spawnPositionX, double spawnPositionY) {
+        super(context, player, camera, spawnPositionX, spawnPositionY);
         this.player = player;
 
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();

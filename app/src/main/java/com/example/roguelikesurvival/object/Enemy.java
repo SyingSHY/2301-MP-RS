@@ -19,11 +19,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Enemy extends Circle {
 
-
-    public Enemy(Context context, Player player, Camera camera) {
+    public Enemy(Context context, Player player, Camera camera, double spawnPositionX, double spawnPositionY) {
         super(context, ContextCompat.getColor(context, R.color.enemy),
-                player.getPositionX() + (ThreadLocalRandom.current().nextInt(2) * 2 - 1)*((Math.random()*200)+1000),
-                player.getPositionY() + (ThreadLocalRandom.current().nextInt(2) * 2 - 1)*((Math.random()*200)+600), 30);
+                player.getPositionX() + spawnPositionX,
+                player.getPositionY() + spawnPositionY, 30);
     }
 
     //설정한 시간간격마다 true를 return하여 스폰준비
