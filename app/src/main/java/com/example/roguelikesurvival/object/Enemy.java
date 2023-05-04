@@ -12,14 +12,15 @@ import com.example.roguelikesurvival.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Enemy extends Circle {
 
 
     public Enemy(Context context, Player player, Camera camera) {
 
-        super(context, ContextCompat.getColor(context, R.color.enemy),player.getPositionX() + Math.cos(Math.random()*2*Math.PI)*((Math.random()*500)+2000),
-                player.getPositionY() + Math.cos(Math.random()*2*Math.PI)*((Math.random()*500)+2000), 30);
+        super(context, ContextCompat.getColor(context, R.color.enemy),player.getPositionX() + (ThreadLocalRandom.current().nextInt(2) * 2 - 1)*((Math.random()*500)+2000),
+                player.getPositionY() + (ThreadLocalRandom.current().nextInt(2) * 2 - 1)*((Math.random()*500)+2000), 30);
 
     }
 

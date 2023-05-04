@@ -163,6 +163,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     public void checkHP() {
         if (player.getHealthPoint() <= 0) {
+            enemyList.clear();
             Intent intent = new Intent(getContext(), ReStart.class);
             getContext().startActivity(intent);
             ((Activity) getContext()).finish();
