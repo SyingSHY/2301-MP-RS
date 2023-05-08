@@ -74,7 +74,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
 
         //오브젝트 초기설정
-        if(jobs == 0)
+        if (jobs == 0)
             player = new Knight(getContext(), joystick, 500, 500, 30);
         else
             player = new Wizzard(getContext(), joystick, 500, 500, 30);

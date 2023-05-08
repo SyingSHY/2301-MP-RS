@@ -19,7 +19,7 @@ public class Wizzard extends Player {
     private static final float SPRITE_WIDTH = 95;
     private static final float SPRITE_HEIGHT = 167;
     private final Joystick joystick;
-    public static final int MAX_HEALTH_POINT = 10;
+    private int maxHealthPoint = 10;
     private HealthBar healthBar;
     private int healthPoint;
     private Bitmap[] bitmap = new Bitmap[4];
@@ -34,7 +34,7 @@ public class Wizzard extends Player {
 
         this.joystick = joystick;
         this.healthBar = new HealthBar(context, this);
-        this.healthPoint = MAX_HEALTH_POINT;
+        this.healthPoint = maxHealthPoint;
 
         //비트맵으로 이미지설정
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
@@ -43,6 +43,7 @@ public class Wizzard extends Player {
         bitmap[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.wizzard_run_anim_f1, bitmapOptions);
         bitmap[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.wizzard_run_anim_f2, bitmapOptions);
         bitmap[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.wizzard_run_anim_f3, bitmapOptions);
+        bitmap[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.wizzard_hit_anim, bitmapOptions);
 
         Matrix matrix = new Matrix();
         matrix.preScale(-1, 1);
@@ -51,6 +52,7 @@ public class Wizzard extends Player {
         bitmapL[1] = Bitmap.createBitmap(bitmap[1], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
         bitmapL[2] = Bitmap.createBitmap(bitmap[2], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
         bitmapL[3] = Bitmap.createBitmap(bitmap[3], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
+        bitmapL[4] = Bitmap.createBitmap(bitmap[4], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
     }
 
     public void update() {
@@ -130,6 +132,10 @@ public class Wizzard extends Player {
         }
 
         healthBar.draw(canvas, camera);
+    }
+
+    public int getMaxHealthPoint() {
+        return maxHealthPoint;
     }
 
     public int getHealthPoint() {

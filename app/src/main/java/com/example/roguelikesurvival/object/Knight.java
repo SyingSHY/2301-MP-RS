@@ -21,7 +21,7 @@ public class Knight extends Player {
     private static final float SPRITE_WIDTH = 95;
     private static final float SPRITE_HEIGHT = 167;
     private final Joystick joystick;
-    public static final int MAX_HEALTH_POINT = 10;
+    private int maxHealthPoint = 10;
     private HealthBar healthBar;
     private int healthPoint;
     private Bitmap[] bitmap = new Bitmap[4];
@@ -36,7 +36,7 @@ public class Knight extends Player {
 
         this.joystick = joystick;
         this.healthBar = new HealthBar(context, this);
-        this.healthPoint = MAX_HEALTH_POINT;
+        this.healthPoint = maxHealthPoint;
 
         //비트맵으로 이미지설정
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
@@ -132,6 +132,10 @@ public class Knight extends Player {
         }
 
         healthBar.draw(canvas, camera);
+    }
+
+    public int getMaxHealthPoint() {
+        return maxHealthPoint;
     }
 
     public int getHealthPoint() {

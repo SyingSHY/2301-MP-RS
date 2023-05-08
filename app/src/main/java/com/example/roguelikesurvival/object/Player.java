@@ -21,14 +21,7 @@ public abstract class Player extends Circle {
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
     private static final float SPRITE_WIDTH = 95;
     private static final float SPRITE_HEIGHT = 167;
-    public static final int MAX_HEALTH_POINT = 10;
-    private HealthBar healthBar;
-    private int healthPoint;
-    private Bitmap[] bitmap = new Bitmap[4];
-    private Bitmap[] bitmapL = new Bitmap[4];
-    private MoveState moveState = MoveState.NOT_MOVING;
-    private int updateBeforeNextMove = 5;
-    private int moveIdx = 1;
+    private int maxHealthPoint = 10;
 
     public Player(Context context, Joystick joystick, double positionX, double positionY, double radius) {
         super(context, ContextCompat.getColor(context, R.color.player), positionX, positionY, radius);
@@ -38,6 +31,7 @@ public abstract class Player extends Circle {
 
     public abstract void draw(Canvas canvas, Camera camera);
 
+    public abstract int getMaxHealthPoint();
     public abstract int getHealthPoint();
 
     public abstract void setHealthPoint(int healthPoint);

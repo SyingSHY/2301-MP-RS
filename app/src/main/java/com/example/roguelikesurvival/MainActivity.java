@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
         KNIGHT,
         WIZZARD
     }
+
     private Game game;
 
     @Override
@@ -21,12 +22,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void onClickKnight(View target){
+    public void onClickKnight(View target) {
         game = new Game(this, 0);
         setContentView(game);
     }
 
-    public void onClickWizzard(View target){
+    public void onClickWizzard(View target) {
         game = new Game(this, 1);
         setContentView(game);
     }
