@@ -13,7 +13,7 @@ import com.example.roguelikesurvival.R;
 
 import java.util.List;
 
-public class Goblin extends Enemy {
+public class Muddy extends Enemy {
     private static final double SPEED_PIXELS_PER_SECOND = Player.SPEED_PIXELS_PER_SECOND * 0.4;
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
     private static final double AVOID_POWER = 5;
@@ -36,17 +36,17 @@ public class Goblin extends Enemy {
     private int updateBeforeNextMove = 5;
     private int moveIdx = 0;
 
-    public Goblin(Context context, Player player, Camera camera, double spawnPositionX, double spawnPositionY) {
+    public Muddy(Context context, Player player, Camera camera, double spawnPositionX, double spawnPositionY) {
         super(context, player, camera, spawnPositionX, spawnPositionY);
         this.player = player;
 
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
         bitmapOptions.inScaled = false;
-        bitmap[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.goblin_run_anim_f0, bitmapOptions);
-        bitmap[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.goblin_run_anim_f1, bitmapOptions);
-        bitmap[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.goblin_run_anim_f2, bitmapOptions);
-        bitmap[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.goblin_run_anim_f3, bitmapOptions);
-        bitmap[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.goblin_hit_anim, bitmapOptions);
+        bitmap[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.muddy_run_anim_f0, bitmapOptions);
+        bitmap[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.muddy_run_anim_f1, bitmapOptions);
+        bitmap[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.muddy_run_anim_f2, bitmapOptions);
+        bitmap[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.muddy_run_anim_f3, bitmapOptions);
+        bitmap[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.muddy_hit_anim, bitmapOptions);
 
         Matrix matrix = new Matrix();
         matrix.preScale(-1, 1);
@@ -143,6 +143,16 @@ public class Goblin extends Enemy {
         positionY += velocityY;
     }
 
+    public void drawHitImage(Canvas canvas, Camera camera) {
+        if (velocityX > 0)
+            canvas.drawBitmap(bitmap[4], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                    (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+        else
+            canvas.drawBitmap(bitmapL[4], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                    (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+
+    }
+
     public boolean getHitImage() {
         return hitImage;
     }
@@ -160,3 +170,4 @@ public class Goblin extends Enemy {
             this.healthPoint = healthPoint;
     }
 }
+

@@ -25,6 +25,8 @@ public class Orc extends Enemy {
     private static double updateUntilNextSpawn = UPDATE_PER_SPAWN;
     private static final float SPRITE_WIDTH = 95;
     private static final float SPRITE_HEIGHT = 95;
+    private int healthPoint = 3;
+    private boolean hitImage = false;
     private final Player player;
 
     private Bitmap[] bitmap = new Bitmap[4];
@@ -34,8 +36,8 @@ public class Orc extends Enemy {
     private int updateBeforeNextMove = 5;
     private int moveIdx = 0;
 
-    public Orc(Context context, Player player, Camera camera) {
-        super(context, player, camera);
+    public Orc(Context context, Player player, Camera camera, double spawnPositionX, double spawnPositionY) {
+        super(context, player, camera, spawnPositionX, spawnPositionY);
         this.player = player;
 
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
@@ -101,8 +103,8 @@ public class Orc extends Enemy {
             double avoidanceDist = GameObject.getDistanceBetweenObject(this, enemy);
 
             if (avoidanceDist != 0f) {
-                avoidanceX -= (1 / (enemy.positionX - positionX));
-                avoidanceY -= (1 / (enemy.positionY - positionY));
+                avoidanceX -= (1 / (enemy.getPositionX() - positionX));
+                avoidanceY -= (1 / (enemy.getPositionY() - positionY));
             }
         }
 
@@ -126,5 +128,22 @@ public class Orc extends Enemy {
         }
         positionX += velocityX;
         positionY += velocityY;
+    }
+
+    public boolean getHitImage() {
+        return hitImage;
+    }
+
+    public void setHitImage(boolean state) {
+        hitImage = state;
+    }
+
+    public int getHealthPoint() {
+        return healthPoint;
+    }
+
+    public void setHealthPoint(int healthPoint) {
+        if (healthPoint >= 0)
+            this.healthPoint = healthPoint;
     }
 }

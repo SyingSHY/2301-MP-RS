@@ -17,8 +17,10 @@ import com.example.roguelikesurvival.gamepanel.Performance;
 import com.example.roguelikesurvival.gamepanel.ReStart;
 import com.example.roguelikesurvival.gamepanel.GameTimer;
 import com.example.roguelikesurvival.object.Enemy;
+import com.example.roguelikesurvival.object.Knight;
 import com.example.roguelikesurvival.object.Player;
 import com.example.roguelikesurvival.object.Spell;
+import com.example.roguelikesurvival.object.Wizzard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +57,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
-    public Game(Context context) {
+    public Game(Context context, int jobs) {
         super(context);
 
         SurfaceHolder surfaceHolder = getHolder();
@@ -72,7 +74,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
 
         //오브젝트 초기설정
-        player = new Player(getContext(), joystick, 500, 500, 30);
+        if (jobs == 0)
+            player = new Knight(getContext(), joystick, 500, 500, 30);
+        else
+            player = new Wizzard(getContext(), joystick, 500, 500, 30);
+
         enemySpawn = new EnemySpawn(this, player, camera, gameTimer);
 
         //배경 설정
