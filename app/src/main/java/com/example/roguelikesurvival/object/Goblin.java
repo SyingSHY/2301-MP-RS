@@ -6,8 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 
-import androidx.core.content.ContextCompat;
-
 import com.example.roguelikesurvival.Camera;
 import com.example.roguelikesurvival.Game;
 import com.example.roguelikesurvival.GameLoop;
@@ -27,17 +25,19 @@ public class Goblin extends Enemy {
     private static double updateUntilNextSpawn = UPDATE_PER_SPAWN;
     private static final float SPRITE_WIDTH = 95;
     private static final float SPRITE_HEIGHT = 95;
+    private int healthPoint = 3;
+    private boolean hitImage = false;
     private final Player player;
 
-    private Bitmap[] bitmap = new Bitmap[4];
-    private Bitmap[] bitmapL = new Bitmap[4];
+    private Bitmap[] bitmap = new Bitmap[5];
+    private Bitmap[] bitmapL = new Bitmap[5];
 
     // 이미지 애니메이션 속도 설정
     private int updateBeforeNextMove = 5;
     private int moveIdx = 0;
 
-    public Goblin(Context context, Player player, Camera camera) {
-        super(context, player, camera);
+    public Goblin(Context context, Player player, Camera camera, double spawnPositionX, double spawnPositionY) {
+        super(context, player, camera, spawnPositionX, spawnPositionY);
         this.player = player;
 
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
@@ -46,6 +46,7 @@ public class Goblin extends Enemy {
         bitmap[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.goblin_run_anim_f1, bitmapOptions);
         bitmap[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.goblin_run_anim_f2, bitmapOptions);
         bitmap[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.goblin_run_anim_f3, bitmapOptions);
+        bitmap[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.goblin_hit_anim, bitmapOptions);
 
         Matrix matrix = new Matrix();
         matrix.preScale(-1, 1);
@@ -54,6 +55,7 @@ public class Goblin extends Enemy {
         bitmapL[1] = Bitmap.createBitmap(bitmap[1], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
         bitmapL[2] = Bitmap.createBitmap(bitmap[2], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
         bitmapL[3] = Bitmap.createBitmap(bitmap[3], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
+        bitmapL[4] = Bitmap.createBitmap(bitmap[4], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
     }
 
     //설정한 시간간격마다 true를 return하여 스폰준비
@@ -88,6 +90,17 @@ public class Goblin extends Enemy {
         else
             canvas.drawBitmap(bitmapL[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
                     (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+
+        //데미지 받을때 모션
+        if (hitImage) {
+            if (velocityX > 0)
+                canvas.drawBitmap(bitmap[4], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                        (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+            else
+                canvas.drawBitmap(bitmapL[4], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                        (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+            hitImage = false;
+        }
     }
 
     @Override
@@ -103,8 +116,8 @@ public class Goblin extends Enemy {
             double avoidanceDist = GameObject.getDistanceBetweenObject(this, enemy);
 
             if (avoidanceDist != 0f) {
-                avoidanceX -= (1 / (enemy.positionX - positionX));
-                avoidanceY -= (1 / (enemy.positionY - positionY));
+                avoidanceX -= (1 / (enemy.getPositionX() - positionX));
+                avoidanceY -= (1 / (enemy.getPositionY() - positionY));
             }
         }
 
@@ -128,5 +141,22 @@ public class Goblin extends Enemy {
         }
         positionX += velocityX;
         positionY += velocityY;
+    }
+
+    public boolean getHitImage() {
+        return hitImage;
+    }
+
+    public void setHitImage(boolean state) {
+        hitImage = state;
+    }
+
+    public int getHealthPoint() {
+        return healthPoint;
+    }
+
+    public void setHealthPoint(int healthPoint) {
+        if (healthPoint >= 0)
+            this.healthPoint = healthPoint;
     }
 }
