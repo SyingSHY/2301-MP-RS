@@ -20,6 +20,8 @@ import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Enemy extends Circle {
+
+    private boolean isFrozen = false;
     
 
     public Enemy(Context context, Player player, Camera camera, double spawnPositionX, double spawnPositionY) {
@@ -31,14 +33,22 @@ public abstract class Enemy extends Circle {
 
 
 
+
+
     //설정한 시간간격마다 true를 return하여 스폰준비
     public abstract boolean readyToSpawn();
     public abstract boolean getHitImage();
     public  abstract void setHitImage(boolean state);
     public abstract int getHealthPoint();
     public abstract void setHealthPoint(int healthPoint);
+    public void freeze(){
+        this.isFrozen=true;
+    }
+    public void unfreeze(){
+        this.isFrozen=false;
+    }
 
-
-
-
+    public boolean isFrozen() {
+        return this.isFrozen;
+    }
 }

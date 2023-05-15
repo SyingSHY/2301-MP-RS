@@ -89,7 +89,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (jobs == 0)
             player = new Knight(getContext(), joystick, 500, 500, 30);
         else
-            player = new Wizzard(getContext(), joystick, 500, 500, 30);
+            player = new Wizzard(getContext(), joystick, 500, 500, 30, enemyList);
 
         enemySpawn = new EnemySpawn(this, player, camera, gameTimer);
 

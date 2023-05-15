@@ -1,5 +1,7 @@
 package com.example.roguelikesurvival.object;
 
+import static com.example.roguelikesurvival.Game.enemyList;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +17,7 @@ import com.example.roguelikesurvival.gamepanel.HealthBar;
 import com.example.roguelikesurvival.gamepanel.Joystick;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Wizzard extends Player {
@@ -36,7 +39,7 @@ public class Wizzard extends Player {
     private long skillCooldown = 30000;  // 30 seconds in milliseconds
 
     public Wizzard(Context context, Joystick joystick, double positionX, double positionY,
-                   double radius) {
+                   double radius, List<Enemy> enemyList) {
         super(context, joystick, positionX, positionY, radius);
 
         this.joystick = joystick;
@@ -156,6 +159,25 @@ public class Wizzard extends Player {
 
     @Override
     public void useSkill() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastSkillUseTime >= skillCooldown) {
+            isUsingSkill = true;  // 스킬 사용 시작
+            lastSkillUseTime = currentTime;
 
+            for(Enemy enemy: enemyList){
+                enemy.freeze();
+            }
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    for(Enemy enemy : enemyList){
+                        enemy.unfreeze();
+                    }
+                    isUsingSkill = false;  // 스킬 사용 종료
+                }
+            }, 10000);  // 10초 후에 체력을 원래 값으로 복구하고 스킬 사용을 종료
+        }
     }
 }
