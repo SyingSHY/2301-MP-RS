@@ -82,7 +82,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         //게임 패널 초기화
         performance = new Performance(context, gameLoop);
         joystick = new Joystick(170, 800, 100, 60);
-        skillButton = new SkillButton(2000, 800, 50, this);
+        skillButton = new SkillButton(1500, 800, 50, this);
 
 
         //오브젝트 초기설정
