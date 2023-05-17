@@ -16,6 +16,7 @@ import com.example.roguelikesurvival.gamepanel.Joystick;
 import com.example.roguelikesurvival.gamepanel.Performance;
 import com.example.roguelikesurvival.gamepanel.ReStart;
 import com.example.roguelikesurvival.gamepanel.GameTimer;
+import com.example.roguelikesurvival.gamepanel.SkillButton;
 import com.example.roguelikesurvival.object.Enemy;
 import com.example.roguelikesurvival.object.Knight;
 import com.example.roguelikesurvival.object.Player;
@@ -29,15 +30,21 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private GameLoop gameLoop;
     private final Player player;
     private final Joystick joystick;
+
+    private final SkillButton skillButton;
     public static List<Enemy> enemyList = new ArrayList<Enemy>();
     public List<Spell> spellList = new ArrayList<Spell>();
     private int joystckPointerId = 0;
+
+    private int skillButtonPointerId = -1;
     public int numberOfSpellsToCast = 0;
     private Performance performance;
     private Camera camera;
     private InfiniteBackground background;
     private EnemySpawn enemySpawn;
     private GameTimer gameTimer;
+
+
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
@@ -57,6 +64,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
+    public void onSkillButtonPressed() {
+        // Add logic for handling skill button press here
+    }
+
     public Game(Context context, int jobs) {
         super(context);
 
@@ -71,13 +82,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         //게임 패널 초기화
         performance = new Performance(context, gameLoop);
         joystick = new Joystick(170, 800, 100, 60);
+        skillButton = new SkillButton(1500, 800, 50, this);
 
 
         //오브젝트 초기설정
         if (jobs == 0)
             player = new Knight(getContext(), joystick, 500, 500, 30);
         else
-            player = new Wizzard(getContext(), joystick, 500, 500, 30);
+            player = new Wizzard(getContext(), joystick, 500, 500, 30, enemyList);
 
         enemySpawn = new EnemySpawn(this, player, camera, gameTimer);
 
@@ -103,6 +115,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 } else if (joystick.isPressed((double) event.getX(), (double) event.getY())) {
                     joystckPointerId = event.getPointerId(event.getActionIndex());
                     joystick.setIsPressed(true);
+                }else if (skillButton.isPressed((double) event.getX(), (double) event.getY())) {
+                    skillButtonPointerId = event.getPointerId(event.getActionIndex());
+                    skillButton.setIsPressed(true);
+                    player.useSkill();
                 } else {
                     numberOfSpellsToCast++;
                 }
@@ -119,6 +135,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 if (joystckPointerId == event.getPointerId(event.getActionIndex())) {
                     joystick.setIsPressed(false);
                     joystick.resetActuator();
+                }else if (skillButtonPointerId == event.getPointerId(event.getActionIndex())) {
+                    skillButton.setIsPressed(false);
+                    onSkillButtonPressed();
                 }
                 return true;
         }
@@ -145,6 +164,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         // 게임패널 그리기
         joystick.draw(canvas);
+
+        // 스킬버튼 그리기
+        skillButton.draw(canvas);
 
         //시간 출력
         gameTimer.draw(canvas);

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.os.Handler;
 
 import androidx.core.content.ContextCompat;
 
@@ -29,6 +30,8 @@ public class Knight extends Player {
     private MoveState moveState = MoveState.NOT_MOVING;
     private int updateBeforeNextMove = 5;
     private int moveIdx = 1;
+    private long lastSkillUseTime;
+    private long skillCooldown = 30000;
 
     public Knight(Context context, Joystick joystick, double positionX, double positionY,
                   double radius) {
@@ -145,6 +148,26 @@ public class Knight extends Player {
     public void setHealthPoint(int healthPoint) {
         if (healthPoint >= 0)
             this.healthPoint = healthPoint;
+    }
+
+    @Override
+    public void useSkill() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastSkillUseTime >= skillCooldown) {
+            final int originalHealthPoint = getHealthPoint();
+            setHealthPoint(getMaxHealthPoint());
+            isUsingSkill = true;  // 스킬 사용 시작
+            lastSkillUseTime = currentTime;
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setHealthPoint(getMaxHealthPoint());
+                    isUsingSkill = false;  // 스킬 사용 종료
+                }
+            }, 10000);  // 10초 후에 체력을 원래 값으로 복구하고 스킬 사용을 종료
+        }
     }
 }
 

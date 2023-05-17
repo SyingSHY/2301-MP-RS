@@ -29,8 +29,8 @@ public class Orc extends Enemy {
     private boolean hitImage = false;
     private final Player player;
 
-    private Bitmap[] bitmap = new Bitmap[4];
-    private Bitmap[] bitmapL = new Bitmap[4];
+    private Bitmap[] bitmap = new Bitmap[5];
+    private Bitmap[] bitmapL = new Bitmap[5];
 
     // 이미지 애니메이션 속도 설정
     private int updateBeforeNextMove = 5;
@@ -46,6 +46,7 @@ public class Orc extends Enemy {
         bitmap[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.orc_warrior_run_anim_f1, bitmapOptions);
         bitmap[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.orc_warrior_run_anim_f2, bitmapOptions);
         bitmap[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.orc_warrior_run_anim_f3, bitmapOptions);
+        bitmap[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.orc_warrior_run_anim_frozen, bitmapOptions);
 
         Matrix matrix = new Matrix();
         matrix.preScale(-1, 1);
@@ -54,6 +55,8 @@ public class Orc extends Enemy {
         bitmapL[1] = Bitmap.createBitmap(bitmap[1], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
         bitmapL[2] = Bitmap.createBitmap(bitmap[2], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
         bitmapL[3] = Bitmap.createBitmap(bitmap[3], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
+        bitmapL[4] = Bitmap.createBitmap(bitmap[4], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
+
     }
 
     //설정한 시간간격마다 true를 return하여 스폰준비
@@ -82,13 +85,27 @@ public class Orc extends Enemy {
         }
 
         // 적의 방향을 체크하여 이미지 방향 결정
+
+
+
         if (velocityX > 0)
             canvas.drawBitmap(bitmap[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
                     (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+
         else
             canvas.drawBitmap(bitmapL[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
                     (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+        if(isFrozen()==true){
+            if (velocityX > 0)
+                canvas.drawBitmap(bitmap[4], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                        (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+            else
+                canvas.drawBitmap(bitmapL[4], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                        (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+        }
     }
+
+
 
     @Override
     public void update() {
@@ -118,8 +135,9 @@ public class Orc extends Enemy {
         double directionX = distanceToPlayerX / distanceToPlayer;
         double directionY = distanceToPlayerY / distanceToPlayer;
 
+
         //플레이어쪽으로 적 이동시키기
-        if (distanceToPlayer > 0) {
+        if (distanceToPlayer > 0 && isFrozen()==false) {
             velocityX = (directionX + avoidanceX * AVOID_POWER) * MAX_SPEED;
             velocityY = (directionY + avoidanceY * AVOID_POWER) * MAX_SPEED;
         } else {
@@ -146,4 +164,6 @@ public class Orc extends Enemy {
         if (healthPoint >= 0)
             this.healthPoint = healthPoint;
     }
+
+
 }

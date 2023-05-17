@@ -15,9 +15,14 @@ import com.example.roguelikesurvival.object.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Enemy extends Circle {
+
+    private boolean isFrozen = false;
+    
 
     public Enemy(Context context, Player player, Camera camera, double spawnPositionX, double spawnPositionY) {
         super(context, ContextCompat.getColor(context, R.color.enemy),
@@ -25,10 +30,25 @@ public abstract class Enemy extends Circle {
                 player.getPositionY() + spawnPositionY, 30);
     }
 
+
+
+
+
+
     //설정한 시간간격마다 true를 return하여 스폰준비
     public abstract boolean readyToSpawn();
     public abstract boolean getHitImage();
     public  abstract void setHitImage(boolean state);
     public abstract int getHealthPoint();
     public abstract void setHealthPoint(int healthPoint);
+    public void freeze(){
+        this.isFrozen=true;
+    }
+    public void unfreeze(){
+        this.isFrozen=false;
+    }
+
+    public boolean isFrozen() {
+        return this.isFrozen;
+    }
 }

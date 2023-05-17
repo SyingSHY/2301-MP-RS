@@ -22,9 +22,13 @@ public abstract class Player extends Circle {
     private static final float SPRITE_WIDTH = 95;
     private static final float SPRITE_HEIGHT = 167;
     private int maxHealthPoint = 10;
+    protected boolean isUsingSkill = false;
 
     public Player(Context context, Joystick joystick, double positionX, double positionY, double radius) {
         super(context, ContextCompat.getColor(context, R.color.player), positionX, positionY, radius);
+    }
+    public boolean isUsingSkill() {
+        return isUsingSkill;
     }
 
     public abstract void update();
@@ -35,4 +39,8 @@ public abstract class Player extends Circle {
     public abstract int getHealthPoint();
 
     public abstract void setHealthPoint(int healthPoint);
+
+    public void useSkill(){
+
+    }
 }

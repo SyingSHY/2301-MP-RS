@@ -97,7 +97,10 @@ public class EnemySpawn {
             if (Circle.isColliding(enemy, player)) {
                 iteratorEnemy.remove();
 
-                player.setHealthPoint(player.getHealthPoint() - 1);
+                if (!player.isUsingSkill()) {
+                    player.setHealthPoint(player.getHealthPoint() - 1);
+                }
+
                 continue;
             }
 
