@@ -13,6 +13,7 @@ import com.example.roguelikesurvival.Camera;
 import com.example.roguelikesurvival.GameLoop;
 import com.example.roguelikesurvival.R;
 import com.example.roguelikesurvival.Utils;
+import com.example.roguelikesurvival.gamepanel.ExpBar;
 import com.example.roguelikesurvival.gamepanel.HealthBar;
 import com.example.roguelikesurvival.gamepanel.Joystick;
 
@@ -22,8 +23,8 @@ public class Knight extends Player {
     private static final float SPRITE_WIDTH = 95;
     private static final float SPRITE_HEIGHT = 167;
     private final Joystick joystick;
-    private int maxHealthPoint = 10;
     private HealthBar healthBar;
+    private int maxHealthPoint = 10;
     private int healthPoint;
     private Bitmap[] bitmap = new Bitmap[4];
     private Bitmap[] bitmapL = new Bitmap[4];
@@ -32,6 +33,7 @@ public class Knight extends Player {
     private int moveIdx = 1;
     private long lastSkillUseTime;
     private long skillCooldown = 30000;
+    private int level = 1;
 
     public Knight(Context context, Joystick joystick, double positionX, double positionY,
                   double radius) {
@@ -135,6 +137,7 @@ public class Knight extends Player {
         }
 
         healthBar.draw(canvas, camera);
+
     }
 
     public int getMaxHealthPoint() {
@@ -168,6 +171,14 @@ public class Knight extends Player {
                 }
             }, 10000);  // 10초 후에 체력을 원래 값으로 복구하고 스킬 사용을 종료
         }
+    }
+
+    public void levelUp() {
+        level += 1;
+    }
+
+    public int getLevel(){
+        return level;
     }
 }
 

@@ -11,6 +11,7 @@ import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
+import com.example.roguelikesurvival.gamepanel.ExpBar;
 import com.example.roguelikesurvival.gamepanel.InfiniteBackground;
 import com.example.roguelikesurvival.gamepanel.Joystick;
 import com.example.roguelikesurvival.gamepanel.Performance;
@@ -43,6 +44,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private InfiniteBackground background;
     private EnemySpawn enemySpawn;
     private GameTimer gameTimer;
+    private ExpBar expBar;
 
 
 
@@ -84,7 +86,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick = new Joystick(170, 800, 100, 60);
         skillButton = new SkillButton(1500, 800, 50, this);
 
-
         //오브젝트 초기설정
         if (jobs == 0)
             player = new Knight(getContext(), joystick, 500, 500, 30);
@@ -95,6 +96,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         //배경 설정
         background = new InfiniteBackground(context, player);
+
+        //경험치바 설정
+        expBar = new ExpBar(context, player);
 
         //카메라 시점을 플레이어가 중앙에 오게 설정
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -171,6 +175,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         //시간 출력
         gameTimer.draw(canvas);
 
+        //경험치바 그리기
+        expBar.draw(canvas);
+
     }
 
     public void update() {
@@ -178,7 +185,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick.update();
         player.update();
 
-        enemySpawn.update(camera);
+        enemySpawn.update(camera, expBar);
 
         camera.update();
 
@@ -187,6 +194,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         background.update(camera);
+
+        expBar.update();
     }
 
     public void checkHP() {

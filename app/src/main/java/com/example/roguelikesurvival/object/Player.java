@@ -22,6 +22,7 @@ public abstract class Player extends Circle {
     private static final float SPRITE_WIDTH = 95;
     private static final float SPRITE_HEIGHT = 167;
     private int maxHealthPoint = 10;
+    private int level;
     protected boolean isUsingSkill = false;
 
     public Player(Context context, Joystick joystick, double positionX, double positionY, double radius) {
@@ -39,6 +40,8 @@ public abstract class Player extends Circle {
     public abstract int getHealthPoint();
 
     public abstract void setHealthPoint(int healthPoint);
+    public abstract void levelUp();
+    public abstract int getLevel();
 
     public void useSkill(){
 

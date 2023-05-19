@@ -13,6 +13,7 @@ import com.example.roguelikesurvival.Camera;
 import com.example.roguelikesurvival.GameLoop;
 import com.example.roguelikesurvival.R;
 import com.example.roguelikesurvival.Utils;
+import com.example.roguelikesurvival.gamepanel.ExpBar;
 import com.example.roguelikesurvival.gamepanel.HealthBar;
 import com.example.roguelikesurvival.gamepanel.Joystick;
 
@@ -26,8 +27,8 @@ public class Wizzard extends Player {
     private static final float SPRITE_WIDTH = 95;
     private static final float SPRITE_HEIGHT = 167;
     private final Joystick joystick;
-    private int maxHealthPoint = 10;
     private HealthBar healthBar;
+    private int maxHealthPoint = 10;
     private int healthPoint;
     private Bitmap[] bitmap = new Bitmap[5];
     private Bitmap[] bitmapL = new Bitmap[5];
@@ -37,6 +38,7 @@ public class Wizzard extends Player {
 
     private long lastSkillUseTime;
     private long skillCooldown = 30000;  // 30 seconds in milliseconds
+    private int level = 1;
 
     public Wizzard(Context context, Joystick joystick, double positionX, double positionY,
                    double radius, List<Enemy> enemyList) {
@@ -164,7 +166,7 @@ public class Wizzard extends Player {
             isUsingSkill = true;  // 스킬 사용 시작
             lastSkillUseTime = currentTime;
 
-            for(Enemy enemy: enemyList){
+            for (Enemy enemy : enemyList) {
                 enemy.freeze();
             }
 
@@ -172,12 +174,20 @@ public class Wizzard extends Player {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    for(Enemy enemy : enemyList){
+                    for (Enemy enemy : enemyList) {
                         enemy.unfreeze();
                     }
                     isUsingSkill = false;  // 스킬 사용 종료
                 }
             }, 10000);  // 10초 후에 체력을 원래 값으로 복구하고 스킬 사용을 종료
         }
+    }
+
+    public void levelUp() {
+        level += 1;
+    }
+
+    public int getLevel(){
+        return level;
     }
 }

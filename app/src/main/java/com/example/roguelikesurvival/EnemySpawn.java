@@ -2,12 +2,16 @@ package com.example.roguelikesurvival;
 
 import android.graphics.Canvas;
 
+import com.example.roguelikesurvival.gamepanel.ExpBar;
 import com.example.roguelikesurvival.gamepanel.GameTimer;
+import com.example.roguelikesurvival.object.BigZombie;
+import com.example.roguelikesurvival.object.Chort;
 import com.example.roguelikesurvival.object.Circle;
 import com.example.roguelikesurvival.object.Enemy;
 import com.example.roguelikesurvival.object.Goblin;
 import com.example.roguelikesurvival.object.Imp;
 import com.example.roguelikesurvival.object.Muddy;
+import com.example.roguelikesurvival.object.Ogre;
 import com.example.roguelikesurvival.object.Orc;
 import com.example.roguelikesurvival.object.Player;
 import com.example.roguelikesurvival.object.Spell;
@@ -24,6 +28,9 @@ public class EnemySpawn {
     private Orc orc;
     private Imp imp;
     private Muddy muddy;
+    private BigZombie bigZombie;
+    private Chort chort;
+    private Ogre ogre;
     private double spawnPositionX;
     private double spawnPositionY;
 
@@ -36,6 +43,9 @@ public class EnemySpawn {
         orc = new Orc((game.getContext()), player, camera, 0, 0);
         imp = new Imp((game.getContext()), player, camera, 0, 0);
         muddy = new Muddy((game.getContext()), player, camera, 0, 0);
+        bigZombie = new BigZombie((game.getContext()), player, camera, 0, 0);
+        chort = new Chort((game.getContext()), player, camera, 0, 0);
+        ogre = new Ogre((game.getContext()), player, camera, 0, 0);
     }
 
     public void positionUpOrDown() {
@@ -56,7 +66,7 @@ public class EnemySpawn {
             positionLeftOrRight();
     }
 
-    public void update(Camera camera) {
+    public void update(Camera camera, ExpBar expBar) {
         //고블린 스폰
         if (goblin.readyToSpawn()) {
             setRandomPosition();
@@ -76,6 +86,21 @@ public class EnemySpawn {
         if (muddy.readyToSpawn()) {
             setRandomPosition();
             game.enemyList.add(new Muddy(game.getContext(), player, camera, spawnPositionX, spawnPositionY));
+        }
+        //좀비 스폰
+        if (bigZombie.readyToSpawn()) {
+            setRandomPosition();
+            game.enemyList.add(new BigZombie(game.getContext(), player, camera, spawnPositionX, spawnPositionY));
+        }
+        //chort 스폰
+        if (chort.readyToSpawn()) {
+            setRandomPosition();
+            game.enemyList.add(new Chort(game.getContext(), player, camera, spawnPositionX, spawnPositionY));
+        }
+        //오거 스폰
+        if (ogre.readyToSpawn()) {
+            setRandomPosition();
+            game.enemyList.add(new Ogre(game.getContext(), player, camera, spawnPositionX, spawnPositionY));
         }
 
         while (game.numberOfSpellsToCast > 0) {
@@ -117,8 +142,10 @@ public class EnemySpawn {
                 }
             }
             //체력 0이하면 몬스터 제거
-            if (enemy.getHealthPoint() <= 0)
+            if (enemy.getHealthPoint() <= 0) {
                 iteratorEnemy.remove();
+                expBar.plusExpPoint(1);
+            }
         }
     }
 }
