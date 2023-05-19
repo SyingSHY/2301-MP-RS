@@ -24,7 +24,7 @@ public class Orc extends Enemy {
     private static final double UPDATE_PER_SPAWN = GameLoop.MAX_UPS / SPAWN_PER_SECOND;
     private static double updateUntilNextSpawn = UPDATE_PER_SPAWN;
     private static final float SPRITE_WIDTH = 95;
-    private static final float SPRITE_HEIGHT = 95;
+    private static final float SPRITE_HEIGHT = 119;
     private int healthPoint = 3;
     private boolean hitImage = false;
     private final Player player;
@@ -46,7 +46,7 @@ public class Orc extends Enemy {
         bitmap[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.orc_warrior_run_anim_f1, bitmapOptions);
         bitmap[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.orc_warrior_run_anim_f2, bitmapOptions);
         bitmap[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.orc_warrior_run_anim_f3, bitmapOptions);
-        bitmap[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.orc_warrior_run_anim_frozen, bitmapOptions);
+        bitmap[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.orc_warrior_hi_anim, bitmapOptions);
 
         Matrix matrix = new Matrix();
         matrix.preScale(-1, 1);
@@ -95,13 +95,16 @@ public class Orc extends Enemy {
         else
             canvas.drawBitmap(bitmapL[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
                     (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-        if(isFrozen()==true){
+
+        //데미지 받을때 모션
+        if (hitImage) {
             if (velocityX > 0)
                 canvas.drawBitmap(bitmap[4], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
                         (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
             else
                 canvas.drawBitmap(bitmapL[4], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
                         (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+            hitImage = false;
         }
     }
 
@@ -137,7 +140,7 @@ public class Orc extends Enemy {
 
 
         //플레이어쪽으로 적 이동시키기
-        if (distanceToPlayer > 0 && isFrozen()==false) {
+        if (distanceToPlayer > 0 && isFrozen() == false) {
             velocityX = (directionX + avoidanceX * AVOID_POWER) * MAX_SPEED;
             velocityY = (directionY + avoidanceY * AVOID_POWER) * MAX_SPEED;
         } else {
@@ -146,6 +149,16 @@ public class Orc extends Enemy {
         }
         positionX += velocityX;
         positionY += velocityY;
+    }
+
+    public void drawHitImage(Canvas canvas, Camera camera) {
+        if (velocityX > 0)
+            canvas.drawBitmap(bitmap[4], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                    (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+        else
+            canvas.drawBitmap(bitmapL[4], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                    (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+
     }
 
     public boolean getHitImage() {
@@ -164,6 +177,4 @@ public class Orc extends Enemy {
         if (healthPoint >= 0)
             this.healthPoint = healthPoint;
     }
-
-
 }

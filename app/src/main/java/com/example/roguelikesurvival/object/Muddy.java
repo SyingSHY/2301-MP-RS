@@ -23,8 +23,8 @@ public class Muddy extends Enemy {
     private static final double SPAWN_PER_SECOND = SPAWN_PER_MINUTE / 60.0;
     private static final double UPDATE_PER_SPAWN = GameLoop.MAX_UPS / SPAWN_PER_SECOND;
     private static double updateUntilNextSpawn = UPDATE_PER_SPAWN;
-    private static final float SPRITE_WIDTH = 95;
-    private static final float SPRITE_HEIGHT = 95;
+    private static final float SPRITE_WIDTH = 96;
+    private static final float SPRITE_HEIGHT = 96;
     private int healthPoint = 3;
     private boolean hitImage = false;
     private final Player player;
@@ -155,16 +155,6 @@ public class Muddy extends Enemy {
         positionY += velocityY;
     }
 
-    public void drawHitImage(Canvas canvas, Camera camera) {
-        if (velocityX > 0)
-            canvas.drawBitmap(bitmap[4], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                    (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-        else
-            canvas.drawBitmap(bitmapL[4], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                    (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-
-    }
-
     public boolean getHitImage() {
         return hitImage;
     }
@@ -182,4 +172,3 @@ public class Muddy extends Enemy {
             this.healthPoint = healthPoint;
     }
 }
-

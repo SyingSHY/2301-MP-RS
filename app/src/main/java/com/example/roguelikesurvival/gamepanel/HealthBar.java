@@ -30,7 +30,7 @@ public class HealthBar {
         healthPaint.setColor(healthColor);
     }
 
-    public void draw(Canvas cansvas, Camera camera) {
+    public void draw(Canvas canvas, Camera camera) {
         float x = (float) player.getPositionX();
         float y = (float) player.getPositionY();
         float distanceToPlayer = 95;
@@ -42,7 +42,7 @@ public class HealthBar {
         borderRight = x + width / 2;
         borderBottom = y + distanceToPlayer;
         borderTop = borderBottom - height;
-        cansvas.drawRect(
+        canvas.drawRect(
                 (float) camera.gameToScreenCoordinateX(borderLeft),
                 (float) camera.gameToScreenCoordinateY(borderTop),
                 (float) camera.gameToScreenCoordinateX(borderRight),
@@ -57,7 +57,7 @@ public class HealthBar {
         healthRight = healthLeft + healthWidth * healthPointPercentage;
         healthBottom = borderBottom - margin;
         healthTop = healthBottom - healthHeight;
-        cansvas.drawRect(
+        canvas.drawRect(
                 (float) camera.gameToScreenCoordinateX(healthLeft),
                 (float) camera.gameToScreenCoordinateY(healthTop),
                 (float) camera.gameToScreenCoordinateX(healthRight),
