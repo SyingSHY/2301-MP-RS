@@ -87,7 +87,15 @@ public class Imp extends Enemy {
         }
 
         // 적의 방향을 체크하여 이미지 방향 결정
-        if (velocityX > 0)
+        if(isFrozen()==true){
+            if (velocityX > 0)
+                canvas.drawBitmap(bitmap[5], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                        (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+            else
+                canvas.drawBitmap(bitmapL[5], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                        (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+        }
+        else if (velocityX > 0)
             canvas.drawBitmap(bitmap[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
                     (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
         else
@@ -105,14 +113,7 @@ public class Imp extends Enemy {
             hitImage = false;
         }
 
-        if(isFrozen()==true){
-            if (velocityX > 0)
-                canvas.drawBitmap(bitmap[5], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                        (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-            else
-                canvas.drawBitmap(bitmapL[5], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                        (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-        }
+
     }
 
     @Override

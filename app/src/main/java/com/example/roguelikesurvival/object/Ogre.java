@@ -29,8 +29,8 @@ public class Ogre extends Enemy {
     private boolean hitImage = false;
     private final Player player;
 
-    private Bitmap[] bitmap = new Bitmap[5];
-    private Bitmap[] bitmapL = new Bitmap[5];
+    private Bitmap[] bitmap = new Bitmap[6];
+    private Bitmap[] bitmapL = new Bitmap[6];
 
     // 이미지 애니메이션 속도 설정
     private int updateBeforeNextMove = 5;
@@ -47,6 +47,8 @@ public class Ogre extends Enemy {
         bitmap[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ogre_run_anim_f2, bitmapOptions);
         bitmap[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ogre_run_anim_f3, bitmapOptions);
         bitmap[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ogre_hit_anim, bitmapOptions);
+        bitmap[5] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ogre_run_anim_frozen, bitmapOptions);
+
 
         Matrix matrix = new Matrix();
         matrix.preScale(-1, 1);
@@ -56,6 +58,8 @@ public class Ogre extends Enemy {
         bitmapL[2] = Bitmap.createBitmap(bitmap[2], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
         bitmapL[3] = Bitmap.createBitmap(bitmap[3], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
         bitmapL[4] = Bitmap.createBitmap(bitmap[4], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
+        bitmapL[5] = Bitmap.createBitmap(bitmap[5], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
+
     }
 
     //설정한 시간간격마다 true를 return하여 스폰준비
@@ -84,7 +88,15 @@ public class Ogre extends Enemy {
         }
 
         // 적의 방향을 체크하여 이미지 방향 결정
-        if (velocityX > 0)
+        if(isFrozen()==true){
+            if (velocityX > 0)
+                canvas.drawBitmap(bitmap[5], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                        (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+            else
+                canvas.drawBitmap(bitmapL[5], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                        (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+        }
+        else if (velocityX > 0)
             canvas.drawBitmap(bitmap[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
                     (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
         else
@@ -101,6 +113,7 @@ public class Ogre extends Enemy {
                         (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
             hitImage = false;
         }
+
     }
 
     @Override
