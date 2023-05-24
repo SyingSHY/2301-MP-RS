@@ -1,7 +1,5 @@
 package com.example.roguelikesurvival;
 
-import android.graphics.Canvas;
-
 import com.example.roguelikesurvival.gamepanel.ExpBar;
 import com.example.roguelikesurvival.gamepanel.GameTimer;
 import com.example.roguelikesurvival.object.BigZombie;
@@ -15,6 +13,7 @@ import com.example.roguelikesurvival.object.Ogre;
 import com.example.roguelikesurvival.object.Orc;
 import com.example.roguelikesurvival.object.Player;
 import com.example.roguelikesurvival.object.Spell;
+import com.example.roguelikesurvival.object.item.BasicAttack;
 
 import java.util.Iterator;
 import java.util.concurrent.ThreadLocalRandom;
@@ -33,6 +32,7 @@ public class EnemySpawn {
     private Ogre ogre;
     private double spawnPositionX;
     private double spawnPositionY;
+    private boolean isDamage;
 
     public EnemySpawn(Game game, Player player, Camera camera, GameTimer gameTimer) {
         this.game = game;
@@ -103,26 +103,20 @@ public class EnemySpawn {
             game.enemyList.add(new Ogre(game.getContext(), player, camera, spawnPositionX, spawnPositionY));
         }
 
-        while (game.numberOfSpellsToCast > 0) {
-            game.spellList.add(new Spell(game.getContext(), player));
-            game.numberOfSpellsToCast--;
-        }
         for (Enemy enemy : game.enemyList) {
             enemy.update();
         }
 
-        for (Spell spell : game.spellList) {
-            spell.update();
-        }
+        //플레이어 끔살 방지를 위해 데미지 받았을 시 무적시간 부여
+        isDamage = player.isDamage();
 
         //enemy와 player간의 충돌 체크
         Iterator<Enemy> iteratorEnemy = game.enemyList.iterator();
         while (iteratorEnemy.hasNext()) {
             Enemy enemy = iteratorEnemy.next();
             if (Circle.isColliding(enemy, player)) {
-                iteratorEnemy.remove();
-
                 if (!player.isUsingSkill()) {
+                    if(isDamage)
                     player.setHealthPoint(player.getHealthPoint() - 1);
                 }
 

@@ -20,6 +20,7 @@ import com.example.roguelikesurvival.gamepanel.Joystick;
 public class Knight extends Player {
     public static final double SPEED_PIXELS_PER_SECOND = 400.0;
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
+    private static final int DAMAGE_DELAY = 30;
     private static final float SPRITE_WIDTH = 95;
     private static final float SPRITE_HEIGHT = 167;
     private final Joystick joystick;
@@ -31,6 +32,7 @@ public class Knight extends Player {
     private MoveState moveState = MoveState.NOT_MOVING;
     private int updateBeforeNextMove = 5;
     private int moveIdx = 1;
+    private int damageDelay = DAMAGE_DELAY;
     private long lastSkillUseTime;
     private long skillCooldown = 30000;
     private int level = 1;
@@ -177,8 +179,21 @@ public class Knight extends Player {
         level += 1;
     }
 
-    public int getLevel(){
+    public int getLevel() {
         return level;
+    }
+
+    public boolean isDamage() {
+        if (damageDelay == DAMAGE_DELAY) {
+            damageDelay--;
+            return true;
+        } else if (damageDelay == 0) {
+            damageDelay = DAMAGE_DELAY;
+            return false;
+        } else {
+            damageDelay--;
+            return false;
+        }
     }
 }
 

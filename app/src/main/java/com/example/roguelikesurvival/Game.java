@@ -22,6 +22,7 @@ import com.example.roguelikesurvival.object.Enemy;
 import com.example.roguelikesurvival.object.Knight;
 import com.example.roguelikesurvival.object.Player;
 import com.example.roguelikesurvival.object.Spell;
+import com.example.roguelikesurvival.object.SpellSpawn;
 import com.example.roguelikesurvival.object.Wizzard;
 
 import java.util.ArrayList;
@@ -43,10 +44,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private Camera camera;
     private InfiniteBackground background;
     private EnemySpawn enemySpawn;
+    private SpellSpawn spellSpawn;
     private GameTimer gameTimer;
     private ExpBar expBar;
-
-
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
@@ -93,6 +93,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             player = new Wizzard(getContext(), joystick, 500, 500, 30, enemyList);
 
         enemySpawn = new EnemySpawn(this, player, camera, gameTimer);
+        spellSpawn = new SpellSpawn(this, player, camera, gameTimer, jobs);
 
         //배경 설정
         background = new InfiniteBackground(context, player);
@@ -119,7 +120,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 } else if (joystick.isPressed((double) event.getX(), (double) event.getY())) {
                     joystckPointerId = event.getPointerId(event.getActionIndex());
                     joystick.setIsPressed(true);
-                }else if (skillButton.isPressed((double) event.getX(), (double) event.getY())) {
+                } else if (skillButton.isPressed((double) event.getX(), (double) event.getY())) {
                     skillButtonPointerId = event.getPointerId(event.getActionIndex());
                     skillButton.setIsPressed(true);
                     player.useSkill();
@@ -139,7 +140,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 if (joystckPointerId == event.getPointerId(event.getActionIndex())) {
                     joystick.setIsPressed(false);
                     joystick.resetActuator();
-                }else if (skillButtonPointerId == event.getPointerId(event.getActionIndex())) {
+                } else if (skillButtonPointerId == event.getPointerId(event.getActionIndex())) {
                     skillButton.setIsPressed(false);
                     onSkillButtonPressed();
                 }
@@ -186,6 +187,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         player.update();
 
         enemySpawn.update(camera, expBar);
+        spellSpawn.update(camera, expBar);
 
         camera.update();
 
