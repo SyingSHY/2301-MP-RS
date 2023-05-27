@@ -41,6 +41,7 @@ public class Wizzard extends Player {
     private long lastSkillUseTime;
     private long skillCooldown = 30000;  // 30 seconds in milliseconds
     private int level = 1;
+    private boolean hitImage = false;
 
     public Wizzard(Context context, Joystick joystick, double positionX, double positionY,
                    double radius, List<Enemy> enemyList) {
@@ -104,45 +105,57 @@ public class Wizzard extends Player {
     public void draw(Canvas canvas, Camera camera) {
 
         // moveState에 따라 플레이어 애니메이션 구현
-        switch (moveState) {
-            case NOT_MOVING:
-                if (directionX > 0)
-                    canvas.drawBitmap(bitmap[0], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                            (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-                else
-                    canvas.drawBitmap(bitmapL[0], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                            (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-                break;
-            case STARTED_MOVING:
-                moveIdx = 1;
-                updateBeforeNextMove = 5;
-                if (directionX > 0)
-                    canvas.drawBitmap(bitmap[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                            (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-                else
-                    canvas.drawBitmap(bitmapL[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                            (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-                break;
-            case IS_MOVING:
-                updateBeforeNextMove--;
-                if (updateBeforeNextMove == 0) {
-                    updateBeforeNextMove = 5;
-                    if (moveIdx == 1)
-                        moveIdx++;
-                    else if (moveIdx == 2)
-                        moveIdx++;
+        if (hitImage == false) {
+            switch (moveState) {
+                case NOT_MOVING:
+                    if (directionX > 0)
+                        canvas.drawBitmap(bitmap[0], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                                (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
                     else
-                        moveIdx = 1;
-                }
-                if (directionX > 0)
-                    canvas.drawBitmap(bitmap[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                            (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-                else
-                    canvas.drawBitmap(bitmapL[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                            (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-                break;
-            default:
-                break;
+                        canvas.drawBitmap(bitmapL[0], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                                (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+                    break;
+                case STARTED_MOVING:
+                    moveIdx = 1;
+                    updateBeforeNextMove = 5;
+                    if (directionX > 0)
+                        canvas.drawBitmap(bitmap[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                                (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+                    else
+                        canvas.drawBitmap(bitmapL[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                                (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+                    break;
+                case IS_MOVING:
+                    updateBeforeNextMove--;
+                    if (updateBeforeNextMove == 0) {
+                        updateBeforeNextMove = 5;
+                        if (moveIdx == 1)
+                            moveIdx++;
+                        else if (moveIdx == 2)
+                            moveIdx++;
+                        else
+                            moveIdx = 1;
+                    }
+                    if (directionX > 0)
+                        canvas.drawBitmap(bitmap[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                                (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+                    else
+                        canvas.drawBitmap(bitmapL[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                                (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if (hitImage) {
+            if (velocityX > 0)
+                canvas.drawBitmap(bitmap[4], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                        (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+            else
+                canvas.drawBitmap(bitmapL[4], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                        (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+                hitImage = false;
         }
 
         healthBar.draw(canvas, camera);
@@ -196,10 +209,11 @@ public class Wizzard extends Player {
     public boolean isDamage() {
         if (damageDelay == DAMAGE_DELAY) {
             damageDelay--;
-            return true;
+            hitImage = true;
+            return false;
         } else if (damageDelay == 0) {
             damageDelay = DAMAGE_DELAY;
-            return false;
+            return true;
         } else {
             damageDelay--;
             return false;

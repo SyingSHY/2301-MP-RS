@@ -32,7 +32,8 @@ public class EnemySpawn {
     private Ogre ogre;
     private double spawnPositionX;
     private double spawnPositionY;
-    private boolean isDamage;
+    private boolean isDamage = false;
+    private boolean damageDelay = false;
 
     public EnemySpawn(Game game, Player player, Camera camera, GameTimer gameTimer) {
         this.game = game;
@@ -108,18 +109,24 @@ public class EnemySpawn {
         }
 
         //플레이어 끔살 방지를 위해 데미지 받았을 시 무적시간 부여
-        isDamage = player.isDamage();
+        if (damageDelay) {
+            if (player.isDamage() == true)
+                damageDelay = false;
+        }
 
         //enemy와 player간의 충돌 체크
         Iterator<Enemy> iteratorEnemy = game.enemyList.iterator();
         while (iteratorEnemy.hasNext()) {
             Enemy enemy = iteratorEnemy.next();
             if (Circle.isColliding(enemy, player)) {
-                if (!player.isUsingSkill()) {
-                    if(isDamage)
-                    player.setHealthPoint(player.getHealthPoint() - 1);
+                if (!player.isUsingSkill() && damageDelay == false) {
+                    isDamage = true;
                 }
-
+                if (isDamage) {
+                    player.setHealthPoint(player.getHealthPoint() - 1);
+                    damageDelay = true;
+                    isDamage = false;
+                }
                 continue;
             }
 

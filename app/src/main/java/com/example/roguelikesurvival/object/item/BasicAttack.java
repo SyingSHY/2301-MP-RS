@@ -88,10 +88,10 @@ public class BasicAttack extends Spell {
 
         if (velocityX > 0)
             canvas.drawBitmap(fireBall[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                    (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+                    (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2) + 40, null);
         else
             canvas.drawBitmap(fireBallL[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                    (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+                    (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2) + 40, null);
 
     }
 

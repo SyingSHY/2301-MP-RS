@@ -27,8 +27,8 @@ public class Knight extends Player {
     private HealthBar healthBar;
     private int maxHealthPoint = 10;
     private int healthPoint;
-    private Bitmap[] bitmap = new Bitmap[4];
-    private Bitmap[] bitmapL = new Bitmap[4];
+    private Bitmap[] bitmap = new Bitmap[5];
+    private Bitmap[] bitmapL = new Bitmap[5];
     private MoveState moveState = MoveState.NOT_MOVING;
     private int updateBeforeNextMove = 5;
     private int moveIdx = 1;
@@ -36,6 +36,7 @@ public class Knight extends Player {
     private long lastSkillUseTime;
     private long skillCooldown = 30000;
     private int level = 1;
+    private boolean hitImage = false;
 
     public Knight(Context context, Joystick joystick, double positionX, double positionY,
                   double radius) {
@@ -52,6 +53,7 @@ public class Knight extends Player {
         bitmap[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.knight_f_run_anim_f1, bitmapOptions);
         bitmap[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.knight_f_run_anim_f2, bitmapOptions);
         bitmap[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.knight_f_run_anim_f3, bitmapOptions);
+        bitmap[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.knight_f_hit_anim, bitmapOptions);
 
         Matrix matrix = new Matrix();
         matrix.preScale(-1, 1);
@@ -60,6 +62,7 @@ public class Knight extends Player {
         bitmapL[1] = Bitmap.createBitmap(bitmap[1], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
         bitmapL[2] = Bitmap.createBitmap(bitmap[2], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
         bitmapL[3] = Bitmap.createBitmap(bitmap[3], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
+        bitmapL[4] = Bitmap.createBitmap(bitmap[4], 0, 0, (int) SPRITE_WIDTH, (int) SPRITE_HEIGHT, matrix, false);
     }
 
     public void update() {
@@ -97,49 +100,60 @@ public class Knight extends Player {
     public void draw(Canvas canvas, Camera camera) {
 
         // moveState에 따라 플레이어 애니메이션 구현
-        switch (moveState) {
-            case NOT_MOVING:
-                if (directionX > 0)
-                    canvas.drawBitmap(bitmap[0], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                            (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-                else
-                    canvas.drawBitmap(bitmapL[0], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                            (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-                break;
-            case STARTED_MOVING:
-                moveIdx = 1;
-                updateBeforeNextMove = 5;
-                if (directionX > 0)
-                    canvas.drawBitmap(bitmap[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                            (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-                else
-                    canvas.drawBitmap(bitmapL[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                            (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-                break;
-            case IS_MOVING:
-                updateBeforeNextMove--;
-                if (updateBeforeNextMove == 0) {
-                    updateBeforeNextMove = 5;
-                    if (moveIdx == 1)
-                        moveIdx++;
-                    else if (moveIdx == 2)
-                        moveIdx++;
+        if (hitImage == false) {
+            switch (moveState) {
+                case NOT_MOVING:
+                    if (directionX > 0)
+                        canvas.drawBitmap(bitmap[0], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                                (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
                     else
-                        moveIdx = 1;
-                }
-                if (directionX > 0)
-                    canvas.drawBitmap(bitmap[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                            (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-                else
-                    canvas.drawBitmap(bitmapL[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
-                            (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-                break;
-            default:
-                break;
+                        canvas.drawBitmap(bitmapL[0], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                                (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+                    break;
+                case STARTED_MOVING:
+                    moveIdx = 1;
+                    updateBeforeNextMove = 5;
+                    if (directionX > 0)
+                        canvas.drawBitmap(bitmap[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                                (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+                    else
+                        canvas.drawBitmap(bitmapL[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                                (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+                    break;
+                case IS_MOVING:
+                    updateBeforeNextMove--;
+                    if (updateBeforeNextMove == 0) {
+                        updateBeforeNextMove = 5;
+                        if (moveIdx == 1)
+                            moveIdx++;
+                        else if (moveIdx == 2)
+                            moveIdx++;
+                        else
+                            moveIdx = 1;
+                    }
+                    if (directionX > 0)
+                        canvas.drawBitmap(bitmap[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                                (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+                    else
+                        canvas.drawBitmap(bitmapL[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                                (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if (hitImage) {
+            if (velocityX > 0)
+                canvas.drawBitmap(bitmap[4], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                        (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+            else
+                canvas.drawBitmap(bitmapL[4], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
+                        (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
+            hitImage = false;
         }
 
         healthBar.draw(canvas, camera);
-
     }
 
     public int getMaxHealthPoint() {
@@ -186,10 +200,11 @@ public class Knight extends Player {
     public boolean isDamage() {
         if (damageDelay == DAMAGE_DELAY) {
             damageDelay--;
-            return true;
+            hitImage = true;
+            return false;
         } else if (damageDelay == 0) {
             damageDelay = DAMAGE_DELAY;
-            return false;
+            return true;
         } else {
             damageDelay--;
             return false;
