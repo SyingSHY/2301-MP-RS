@@ -22,8 +22,8 @@ import com.example.roguelikesurvival.object.Enemy;
 import com.example.roguelikesurvival.object.Knight;
 import com.example.roguelikesurvival.object.Player;
 import com.example.roguelikesurvival.object.Spell;
-import com.example.roguelikesurvival.object.SpellSpawn;
 import com.example.roguelikesurvival.object.Wizzard;
+import com.example.roguelikesurvival.object.item.BasicAttack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +47,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private SpellSpawn spellSpawn;
     private GameTimer gameTimer;
     private ExpBar expBar;
+    private BasicAttack basicAttack;
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
@@ -92,14 +93,18 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         else
             player = new Wizzard(getContext(), joystick, 500, 500, 30, enemyList);
 
-        enemySpawn = new EnemySpawn(this, player, camera, gameTimer);
-        spellSpawn = new SpellSpawn(this, player, camera, gameTimer, jobs);
+        //기본공격 설정
+        basicAttack = new BasicAttack(context, player, jobs, 20);
 
         //배경 설정
         background = new InfiniteBackground(context, player);
 
         //경험치바 설정
         expBar = new ExpBar(context, player);
+
+        //스포너 설정
+        enemySpawn = new EnemySpawn(this, player, camera, gameTimer);
+        spellSpawn = new SpellSpawn(this, player, camera, gameTimer, jobs, basicAttack);
 
         //카메라 시점을 플레이어가 중앙에 오게 설정
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -178,6 +183,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         //경험치바 그리기
         expBar.draw(canvas);
+
+        //기본공격
+        if(basicAttack.getAnimationState() == true)
+            basicAttack.draw(canvas,camera);
 
     }
 

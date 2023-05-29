@@ -15,7 +15,7 @@ public class ExpBar {
     private Context context;
     private int width, height;
     private Paint borderPaint, healthPaint;
-    private int maxExpPoint = 10;
+    private int maxExpPoint = 5;
     private int expPoint = 0;
 
     public ExpBar(Context context, Player player) {
@@ -63,7 +63,7 @@ public class ExpBar {
     }
 
     public void update(){
-        if(maxExpPoint == expPoint){
+        if(maxExpPoint <= expPoint){
             maxExpPoint = maxExpPoint * 2;
             expPoint = 0;
             player.levelUp();

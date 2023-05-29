@@ -17,8 +17,8 @@ public class Spell extends Circle {
     private double updatePerAttack = GameLoop.MAX_UPS / attackPerSecond;
     private double updateUntilNextAttack = updatePerAttack;
 
-    public Spell(Context context, Player spellcaster) {
-        super(context, ContextCompat.getColor(context, R.color.spell), spellcaster.getPositionX(), spellcaster.getPositionY(), 20);
+    public Spell(Context context, Player spellcaster, int radius) {
+        super(context, ContextCompat.getColor(context, R.color.spell), spellcaster.getPositionX(), spellcaster.getPositionY(), radius);
 
         velocityX = spellcaster.getDirectionX() * MAX_SPEED;
         velocityY = spellcaster.getDirectionY() * MAX_SPEED;
@@ -28,5 +28,9 @@ public class Spell extends Circle {
     public void update() {
         positionX += velocityX;
         positionY += velocityY;
+    }
+
+    public boolean isAnimationState(){
+        return false;
     }
 }

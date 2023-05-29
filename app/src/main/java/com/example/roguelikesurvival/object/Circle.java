@@ -29,6 +29,11 @@ public abstract class Circle extends GameObject {
             return false;
     }
 
+    // 공격 범위내에 있으면 true를 return
+    public boolean withinAttackDistance(Camera camera, Enemy enemy){
+        return false;
+    }
+
     private double getRadius() {
         return radius;
     }
