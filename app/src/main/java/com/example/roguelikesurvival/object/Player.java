@@ -42,6 +42,7 @@ public abstract class Player extends Circle {
     public abstract void setHealthPoint(int healthPoint);
     public abstract void levelUp();
     public abstract int getLevel();
+    public abstract boolean isDamage();
 
     public void useSkill(){
 

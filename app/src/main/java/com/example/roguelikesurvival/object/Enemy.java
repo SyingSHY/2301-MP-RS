@@ -24,10 +24,10 @@ public abstract class Enemy extends Circle {
     private boolean isFrozen = false;
     
 
-    public Enemy(Context context, Player player, Camera camera, double spawnPositionX, double spawnPositionY) {
+    public Enemy(Context context, Player player, Camera camera, double spawnPositionX, double spawnPositionY, int radius) {
         super(context, ContextCompat.getColor(context, R.color.enemy),
                 player.getPositionX() + spawnPositionX,
-                player.getPositionY() + spawnPositionY, 30);
+                player.getPositionY() + spawnPositionY, radius);
     }
 
 

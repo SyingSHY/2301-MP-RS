@@ -14,7 +14,7 @@ import com.example.roguelikesurvival.R;
 import java.util.List;
 
 public class Goblin extends Enemy {
-    private static final double SPEED_PIXELS_PER_SECOND = Player.SPEED_PIXELS_PER_SECOND * 0.4;
+    private static final double SPEED_PIXELS_PER_SECOND = Player.SPEED_PIXELS_PER_SECOND * 0.2;
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
     private static final double AVOID_POWER = 5;
 
@@ -25,7 +25,7 @@ public class Goblin extends Enemy {
     private static double updateUntilNextSpawn = UPDATE_PER_SPAWN;
     private static final float SPRITE_WIDTH = 95;
     private static final float SPRITE_HEIGHT = 95;
-    private int healthPoint = 3;
+    private int healthPoint = 1;
     private boolean hitImage = false;
     private final Player player;
 
@@ -36,8 +36,8 @@ public class Goblin extends Enemy {
     private int updateBeforeNextMove = 5;
     private int moveIdx = 0;
 
-    public Goblin(Context context, Player player, Camera camera, double spawnPositionX, double spawnPositionY) {
-        super(context, player, camera, spawnPositionX, spawnPositionY);
+    public Goblin(Context context, Player player, Camera camera, double spawnPositionX, double spawnPositionY, int radius) {
+        super(context, player, camera, spawnPositionX, spawnPositionY, radius);
         this.player = player;
 
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
