@@ -17,45 +17,82 @@ public class SpellSpawn {
     private Player player;
     private int jobs;
 
-    public SpellSpawn(Game game, Player player, Camera camera, GameTimer gameTimer, int jobs) {
+    public SpellSpawn(Game game, Player player, Camera camera, GameTimer gameTimer, int jobs, BasicAttack basicAttack) {
         this.game = game;
         this.gameTimer = gameTimer;
         this.player = player;
         this.jobs = jobs;
-
-        basicAttack = new BasicAttack(game.getContext(), player, jobs);
-
+        this.basicAttack = basicAttack;
     }
 
     public void update(Camera camera, ExpBar expBar) {
         //기사일때 기본공격
         if (jobs == 0) {
-            while (game.numberOfSpellsToCast > 0) {
-                game.spellList.add(new BasicAttack(game.getContext(), player, jobs));
-                game.numberOfSpellsToCast--;
+            while (basicAttack.readyToAttack()) {
+//                game.spellList.add(new BasicAttack(game.getContext(), player, jobs, 60));
+                basicAttack.startAnimationState();
             }
+
+            Iterator<Enemy> iteratorEnemy = game.enemyList.iterator();
+            while (iteratorEnemy.hasNext()) {
+                Enemy enemy = iteratorEnemy.next();
+                if (basicAttack.getDamageState() == true && basicAttack.withinAttackDistance(camera, enemy)) {
+                    enemy.setHealthPoint(enemy.getHealthPoint() - 1);
+                    enemy.setHitImage(true);
+                }
+            }
+
+//            //enemy와 spell간의 충돌 체크
+//            Iterator<Spell> iteratorSpell = game.spellList.iterator();
+//            while (iteratorSpell.hasNext()) {
+//                Circle spell = iteratorSpell.next();
+//
+//                Iterator<Enemy> iteratorEnemy = game.enemyList.iterator();
+//                while (iteratorEnemy.hasNext()) {
+//                    Enemy enemy = iteratorEnemy.next();
+//                    if (basicAttack.withinAttackDistance(camera, enemy)) {
+//                        enemy.setHealthPoint(enemy.getHealthPoint() - 1);
+//                        enemy.setHitImage(true);
+//                        break;
+//                    }
+//                }
+//                iteratorSpell.remove();
+//            }
         }
 
         //마법사일때 기본공격
         else {
             while (basicAttack.readyToAttack()) {
-                game.spellList.add(new BasicAttack(game.getContext(), player, jobs));
+                game.spellList.add(new BasicAttack(game.getContext(), player, jobs, 20));
+            }
+
+            for (Spell spell : game.spellList) {
+                spell.update();
+            }
+
+            Iterator<Spell> iteratorSpell = game.spellList.iterator();
+            while (iteratorSpell.hasNext()) {
+                Circle spell = iteratorSpell.next();
+
+                // enemy와 spell간의 충돌 체크
+                Iterator<Enemy> iteratorEnemy = game.enemyList.iterator();
+                while (iteratorEnemy.hasNext()) {
+                    Enemy enemy = iteratorEnemy.next();
+
+                    if (Circle.isColliding(spell, enemy)) {
+                        iteratorSpell.remove();
+                        enemy.setHealthPoint(enemy.getHealthPoint() - 1);
+                        enemy.setHitImage(true);
+                        break;
+                    }
+                }
+
+                // 화염구가 플레이어에게서 일정거리 이상 떨어지면 삭제
+                if (Utils.getDistanceBetweenPoints(spell.getPositionX(), spell.getPositionY(), player.getPositionX(), player.getPositionY()) > 1500) {
+                    iteratorSpell.remove();
+                    break;
+                }
             }
         }
-
-        for (Spell spell : game.spellList) {
-            spell.update();
-        }
-
-        Iterator<Spell> iteratorSpell = game.spellList.iterator();
-        while (iteratorSpell.hasNext()) {
-            Circle spell = iteratorSpell.next();
-
-            if (Utils.getDistanceBetweenPoints(spell.getPositionX(), spell.getPositionY(), player.getPositionX(), player.getPositionY()) > 1500) {
-                iteratorSpell.remove();
-                break;
-            }
-        }
-
     }
 }
