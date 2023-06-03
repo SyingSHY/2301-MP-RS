@@ -33,6 +33,10 @@ public class SelectItem {
     private int[] randomItem = new int[3];
     boolean levelUp = false;
     boolean setRandom = false;
+    private int color;
+    private Paint levelUpMessage;
+    private Paint name;
+    private Paint explain;
 
     private PlusHp plusHp;
     private PlusAtk plusAtk;
@@ -41,6 +45,23 @@ public class SelectItem {
 
         this.context = context;
         this.player = player;
+        color = ContextCompat.getColor(context, R.color.black);
+
+        levelUpMessage = new Paint();
+        levelUpMessage.setColor(color);
+        levelUpMessage.setTextSize(60);
+        levelUpMessage.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+
+        name = new Paint();
+        name.setColor(color);
+        name.setTextSize(35);
+        name.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+
+        explain = new Paint();
+        explain.setColor(color);
+        explain.setTextSize(30);
+        explain.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+
 
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
         bitmapOptions.inScaled = false;
@@ -82,28 +103,13 @@ public class SelectItem {
         canvas.drawBitmap(itemBitmap[randomItem[1]], selectPosX, secondSelectPosY, null);
         canvas.drawBitmap(itemBitmap[randomItem[2]], selectPosX, thirdSelectPosY, null);
 
-        int color = ContextCompat.getColor(context, R.color.black);
-
-        Paint levelUpMessage = new Paint();
-        levelUpMessage.setColor(color);
-        levelUpMessage.setTextSize(60);
-        levelUpMessage.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-
-        Paint name = new Paint();
-        name.setColor(color);
-        name.setTextSize(35);
-        name.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-
-        Paint explain = new Paint();
-        explain.setColor(color);
-        explain.setTextSize(30);
-        explain.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-
         //레벨업 메세지
         canvas.drawText("레벨업!", selectPosX + 195, firstSelectPosY - 90, levelUpMessage);
-//        //아이템 설명 출력
-//        canvas.drawText("체력증가", selectPosX + 150, firstSelectPosY + 75, name);
-//        canvas.drawText("체력을 2 증가시킵니다.", selectPosX + 150, firstSelectPosY + 115, explain);
+        //아이템 설명 출력
+        explainItem(canvas, itemBitmap[randomItem[0]], plusHp, plusAtk, selectPosX, firstSelectPosY);
+        explainItem(canvas, itemBitmap[randomItem[1]], plusHp, plusAtk, selectPosX, secondSelectPosY);
+        explainItem(canvas, itemBitmap[randomItem[2]], plusHp, plusAtk, selectPosX, thirdSelectPosY);
+
     }
 
     public void update(){
@@ -122,6 +128,18 @@ public class SelectItem {
     public void levelUp(){
         levelUp = true;
         setRandom = true;
+    }
+
+    //아이템 설명
+    public void explainItem(Canvas canvas, Bitmap select, PlusHp plusHp, PlusAtk plusAtk, float posX, float posY){
+        if(select.equals(plusHp.getBitmap())){
+            canvas.drawText("체력증가", posX + 150, posY + 75, name);
+            canvas.drawText("체력을 2 증가시킵니다.", posX + 150, posY + 115, explain);
+        }
+        else if(select.equals(plusAtk.getBitmap())){
+            canvas.drawText("공격력증가", posX + 150, posY + 75, name);
+            canvas.drawText("공격력을 2 증가시킵니다.", posX + 150, posY + 115, explain);
+        }
     }
 
     //아이템 선택 메서드
