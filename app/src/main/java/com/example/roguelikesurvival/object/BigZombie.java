@@ -10,6 +10,7 @@ import com.example.roguelikesurvival.Camera;
 import com.example.roguelikesurvival.Game;
 import com.example.roguelikesurvival.GameLoop;
 import com.example.roguelikesurvival.R;
+import com.example.roguelikesurvival.SelectItem;
 
 import java.util.List;
 
@@ -73,18 +74,21 @@ public class BigZombie extends Enemy {
         }
     }
 
-    public void draw(Canvas canvas, Camera camera) {
-        updateBeforeNextMove--;
-        if (updateBeforeNextMove == 0) {
-            updateBeforeNextMove = 5;
-            if (moveIdx == 0)
-                moveIdx++;
-            else if (moveIdx == 1)
-                moveIdx++;
-            else if (moveIdx == 2)
-                moveIdx++;
-            else
-                moveIdx = 0;
+    public void draw(Canvas canvas, Camera camera, SelectItem selectItem) {
+        // 레벨업시 아이템선택할때 이미지멈춤
+        if(!selectItem.isLevelUp()) {
+            updateBeforeNextMove--;
+            if (updateBeforeNextMove == 0) {
+                updateBeforeNextMove = 5;
+                if (moveIdx == 0)
+                    moveIdx++;
+                else if (moveIdx == 1)
+                    moveIdx++;
+                else if (moveIdx == 2)
+                    moveIdx++;
+                else
+                    moveIdx = 0;
+            }
         }
 
         // 적의 방향을 체크하여 이미지 방향 결정
@@ -169,7 +173,6 @@ public class BigZombie extends Enemy {
     }
 
     public void setHealthPoint(int healthPoint) {
-        if (healthPoint >= 0)
             this.healthPoint = healthPoint;
     }
 }

@@ -31,6 +31,7 @@ public class Wizzard extends Player {
     private HealthBar healthBar;
     private int maxHealthPoint = 10;
     private int healthPoint;
+    private int attackPower = 1;
     private Bitmap[] bitmap = new Bitmap[5];
     private Bitmap[] bitmapL = new Bitmap[5];
     private MoveState moveState = MoveState.NOT_MOVING;
@@ -155,7 +156,7 @@ public class Wizzard extends Player {
             else
                 canvas.drawBitmap(bitmapL[4], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
                         (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-                hitImage = false;
+            hitImage = false;
         }
 
         healthBar.draw(canvas, camera);
@@ -165,6 +166,10 @@ public class Wizzard extends Player {
         return maxHealthPoint;
     }
 
+    public void plusMaxHealthPoint(int point) {
+        maxHealthPoint += point;
+    }
+
     public int getHealthPoint() {
         return healthPoint;
     }
@@ -172,6 +177,14 @@ public class Wizzard extends Player {
     public void setHealthPoint(int healthPoint) {
         if (healthPoint >= 0)
             this.healthPoint = healthPoint;
+    }
+
+    public int getAttackPower() {
+        return attackPower;
+    }
+
+    public void plusAttackPower(int point) {
+        attackPower += point;
     }
 
     @Override

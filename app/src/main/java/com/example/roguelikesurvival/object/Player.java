@@ -37,7 +37,10 @@ public abstract class Player extends Circle {
     public abstract void draw(Canvas canvas, Camera camera);
 
     public abstract int getMaxHealthPoint();
+    public abstract void plusMaxHealthPoint(int point);
     public abstract int getHealthPoint();
+    public abstract int getAttackPower();
+    public abstract void plusAttackPower(int point);
 
     public abstract void setHealthPoint(int healthPoint);
     public abstract void levelUp();

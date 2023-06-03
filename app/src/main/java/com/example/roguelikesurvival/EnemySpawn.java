@@ -127,7 +127,6 @@ public class EnemySpawn {
                     damageDelay = true;
                     isDamage = false;
                 }
-                continue;
             }
 
 //            //enemy와 spell간의 충돌 체크

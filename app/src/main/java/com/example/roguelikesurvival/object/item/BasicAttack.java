@@ -102,11 +102,11 @@ public class BasicAttack extends Spell {
     public void draw(Canvas canvas, Camera camera) {
 
         updateBeforeNextAttack--;
+        damageState = false;
         if (updateBeforeNextAttack == 0) {
             updateBeforeNextAttack = 5;
             if (moveIdx == 0) {
                 moveIdx++;
-                damageState = false;
             }
             else if (moveIdx == 1)
                 moveIdx++;
@@ -192,5 +192,8 @@ public class BasicAttack extends Spell {
 
     public boolean getDamageState(){
         return damageState;
+    }
+    public void setDamageState(boolean state){
+        damageState = state;
     }
 }

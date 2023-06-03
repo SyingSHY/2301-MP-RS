@@ -41,8 +41,14 @@ public class SpellSpawn {
                 while (iteratorEnemy.hasNext()) {
                     Enemy enemy = iteratorEnemy.next();
                     if (basicAttack.getDamageState() == true && basicAttack.withinAttackDistance(camera, enemy)) {
-                        enemy.setHealthPoint(enemy.getHealthPoint() - 1);
+                        enemy.setHealthPoint(enemy.getHealthPoint() - player.getAttackPower());
                         enemy.setHitImage(true);
+                    }
+
+                    //체력 0이하면 몬스터 제거
+                    if (enemy.getHealthPoint() <= 0) {
+                        iteratorEnemy.remove();
+                        expBar.plusExpPoint(1);
                     }
                 }
 
@@ -85,9 +91,15 @@ public class SpellSpawn {
 
                     if (Circle.isColliding(spell, enemy)) {
                         iteratorSpell.remove();
-                        enemy.setHealthPoint(enemy.getHealthPoint() - 1);
+                        enemy.setHealthPoint(enemy.getHealthPoint() - player.getAttackPower());
                         enemy.setHitImage(true);
                         break;
+                    }
+
+                    //체력 0이하면 몬스터 제거
+                    if (enemy.getHealthPoint() <= 0) {
+                        iteratorEnemy.remove();
+                        expBar.plusExpPoint(1);
                     }
                 }
 

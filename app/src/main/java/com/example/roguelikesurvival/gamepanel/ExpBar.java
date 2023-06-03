@@ -8,19 +8,22 @@ import androidx.core.content.ContextCompat;
 
 import com.example.roguelikesurvival.Camera;
 import com.example.roguelikesurvival.R;
+import com.example.roguelikesurvival.SelectItem;
 import com.example.roguelikesurvival.object.Player;
 
 public class ExpBar {
     private Player player;
     private Context context;
+    private SelectItem selectItem;
     private int width, height;
     private Paint borderPaint, healthPaint;
     private int maxExpPoint = 5;
     private int expPoint = 0;
 
-    public ExpBar(Context context, Player player) {
+    public ExpBar(Context context, Player player, SelectItem selectItem) {
         this.player = player;
         this.context = context;
+        this.selectItem = selectItem;
         this.width = 1920;
         this.height = 30;
 
@@ -59,7 +62,7 @@ public class ExpBar {
         int color = ContextCompat.getColor(context, R.color.white);
         paint.setColor(color);
         paint.setTextSize(50);
-        canvas.drawText("Level: " + player.getLevel(), 600, 100, paint);
+        canvas.drawText("Level: " + player.getLevel(), 100, 90, paint);
     }
 
     public void update(){
@@ -67,6 +70,7 @@ public class ExpBar {
             maxExpPoint = maxExpPoint * 2;
             expPoint = 0;
             player.levelUp();
+            selectItem.levelUp();
         }
     }
 

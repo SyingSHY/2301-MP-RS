@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -48,6 +49,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private GameTimer gameTimer;
     private ExpBar expBar;
     private BasicAttack basicAttack;
+    private SelectItem selectItem;
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
@@ -99,9 +101,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         //배경 설정
         background = new InfiniteBackground(context, player);
 
-        //경험치바 설정
-        expBar = new ExpBar(context, player);
-
         //스포너 설정
         enemySpawn = new EnemySpawn(this, player, camera, gameTimer);
         spellSpawn = new SpellSpawn(this, player, camera, gameTimer, jobs, basicAttack);
@@ -110,6 +109,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics((displayMetrics));
         camera = new Camera(displayMetrics.widthPixels, displayMetrics.heightPixels, player);
+
+        // 아이템 선택창 설정
+        selectItem = new SelectItem(context, player, camera);
+
+        //경험치바 설정
+        expBar = new ExpBar(context, player, selectItem);
 
         setFocusable(true);
     }
@@ -120,17 +125,29 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
-                if (joystick.getIsPressed()) {
-                    numberOfSpellsToCast++;
-                } else if (joystick.isPressed((double) event.getX(), (double) event.getY())) {
-                    joystckPointerId = event.getPointerId(event.getActionIndex());
-                    joystick.setIsPressed(true);
-                } else if (skillButton.isPressed((double) event.getX(), (double) event.getY())) {
-                    skillButtonPointerId = event.getPointerId(event.getActionIndex());
-                    skillButton.setIsPressed(true);
-                    player.useSkill();
-                } else {
-                    numberOfSpellsToCast++;
+                if (selectItem.isLevelUp() == false) {
+                    if (joystick.getIsPressed()) {
+                        numberOfSpellsToCast++;
+                    } else if (joystick.isPressed((double) event.getX(), (double) event.getY())) {
+                        joystckPointerId = event.getPointerId(event.getActionIndex());
+                        joystick.setIsPressed(true);
+                    } else if (skillButton.isPressed((double) event.getX(), (double) event.getY())) {
+                        skillButtonPointerId = event.getPointerId(event.getActionIndex());
+                        skillButton.setIsPressed(true);
+                        player.useSkill();
+                    } else {
+                        numberOfSpellsToCast++;
+                    }
+                }
+                // 레벨업을 했을때
+                else {
+                    if (selectItem.isFirstSelectPressed((double) event.getX(), (double) event.getY())) {
+                        selectItem.setLevelUp(false);
+                    } else if (selectItem.isSecondSelectPressed((double) event.getX(), (double) event.getY())) {
+                        selectItem.setLevelUp(false);
+                    } else if (selectItem.isThirdSelectPressed((double) event.getX(), (double) event.getY())) {
+                        selectItem.setLevelUp(false);
+                    }
                 }
                 return true;
 
@@ -157,7 +174,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-
         //배경 그리기
         background.draw(canvas, camera);
 
@@ -165,7 +181,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         player.draw(canvas, camera);
 
         for (Enemy enemy : enemyList) {
-            enemy.draw(canvas, camera);
+            enemy.draw(canvas, camera, selectItem);
         }
 
         for (Spell spell : spellList) {
@@ -179,34 +195,40 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         skillButton.draw(canvas);
 
         //시간 출력
-        gameTimer.draw(canvas);
+        gameTimer.draw(canvas, selectItem);
 
         //경험치바 그리기
         expBar.draw(canvas);
 
         //기본공격
-        if(basicAttack.getAnimationState() == true)
-            basicAttack.draw(canvas,camera);
+        if (basicAttack.getAnimationState() == true)
+            basicAttack.draw(canvas, camera);
 
+        //레벨업하면 아이템창
+        if (selectItem.isLevelUp())
+            selectItem.draw(canvas, camera);
     }
 
     public void update() {
 
-        joystick.update();
-        player.update();
+        if (!selectItem.isLevelUp()) {
+            joystick.update();
+            player.update();
 
-        enemySpawn.update(camera, expBar);
-        spellSpawn.update(camera, expBar);
+            enemySpawn.update(camera, expBar);
+            spellSpawn.update(camera, expBar);
 
-        camera.update();
+            camera.update();
 
-        if (player.getHealthPoint() <= 0) {
-            checkHP();
+            if (player.getHealthPoint() <= 0) {
+                checkHP();
+            }
+
+            background.update(camera);
+
+            expBar.update();
         }
 
-        background.update(camera);
-
-        expBar.update();
     }
 
     public void checkHP() {
