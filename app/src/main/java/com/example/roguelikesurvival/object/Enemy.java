@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 import com.example.roguelikesurvival.Camera;
 import com.example.roguelikesurvival.Game;
 import com.example.roguelikesurvival.GameLoop;
+import com.example.roguelikesurvival.PauseMenu;
 import com.example.roguelikesurvival.R;
 import com.example.roguelikesurvival.SelectItem;
 import com.example.roguelikesurvival.object.Circle;
@@ -31,7 +32,7 @@ public abstract class Enemy extends Circle {
                 player.getPositionY() + spawnPositionY, radius);
     }
 
-    public abstract void draw(Canvas canvas, Camera camera, SelectItem selectItem);
+    public abstract void draw(Canvas canvas, Camera camera, SelectItem selectItem, PauseMenu pauseMenu);
 
     //설정한 시간간격마다 true를 return하여 스폰준비
     public abstract boolean readyToSpawn();

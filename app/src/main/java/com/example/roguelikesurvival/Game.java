@@ -13,6 +13,7 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 
 import com.example.roguelikesurvival.gamepanel.ExpBar;
+import com.example.roguelikesurvival.gamepanel.GamePauseButton;
 import com.example.roguelikesurvival.gamepanel.InfiniteBackground;
 import com.example.roguelikesurvival.gamepanel.Joystick;
 import com.example.roguelikesurvival.gamepanel.Performance;
@@ -34,13 +35,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private GameLoop gameLoop;
     private final Player player;
     private final Joystick joystick;
-
     private final SkillButton skillButton;
+    private final GamePauseButton gamePauseButton;
     public static List<Enemy> enemyList = new ArrayList<Enemy>();
     public List<Spell> spellList = new ArrayList<Spell>();
     private int joystckPointerId = 0;
-
     private int skillButtonPointerId = -1;
+    private int gamePauseButtonPointerId = -2;
     public int numberOfSpellsToCast = 0;
     private Performance performance;
     private Camera camera;
@@ -50,6 +51,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private GameTimer gameTimer;
     private ExpBar expBar;
     private SelectItem selectItem;
+    private PauseMenu pauseMenu;
     private PlayerState playerState;
 
     @Override
@@ -74,6 +76,18 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Add logic for handling skill button press here
     }
 
+    public void onGamePauseButtonPressed() {
+        pauseMenu.gamePauseMenu();
+        pauseMenu.setGamePauseMenu(true);
+    }
+
+    public void onGameGiveupButtonPressed() {
+        enemyList.clear(); // enemy 초기화 하도록 변경
+        Intent intent = new Intent(getContext(), ReStart.class);
+        getContext().startActivity(intent);
+        ((Activity) getContext()).finish();
+    }
+
     public Game(Context context, int jobs) {
         super(context);
 
@@ -89,6 +103,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         performance = new Performance(context, gameLoop);
         joystick = new Joystick(170, 800, 100, 60);
         skillButton = new SkillButton(1500, 800, 50, this);
+        gamePauseButton = new GamePauseButton(context, 1500, 140, this);
 
         //오브젝트 초기설정
         if (jobs == 0)
@@ -101,6 +116,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         // 아이템 선택창 설정
         selectItem = new SelectItem(context, player, camera);
+
+        // 게임 일시정지 메뉴 설정
+        pauseMenu = new PauseMenu(context, player, camera);
 
         //스포너 설정
         enemySpawn = new EnemySpawn(this, player, camera, gameTimer);
@@ -125,7 +143,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
-                if (selectItem.isLevelUp() == false) {
+                if ((selectItem.isLevelUp() == false) && (pauseMenu.isGamePauseMenu() == false)) {
                     if (joystick.getIsPressed()) {
                         numberOfSpellsToCast++;
                     } else if (joystick.isPressed((double) event.getX(), (double) event.getY())) {
@@ -135,18 +153,32 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                         skillButtonPointerId = event.getPointerId(event.getActionIndex());
                         skillButton.setIsPressed(true);
                         player.useSkill();
+                    } else if (gamePauseButton.isPressed((double) event.getX(), (double) event.getY())) {
+                        gamePauseButtonPointerId = event.getPointerId(event.getActionIndex());
+                        gamePauseButton.setIsPressed(true);
                     } else {
                         numberOfSpellsToCast++;
                     }
                 }
                 // 레벨업을 했을때
-                else {
+                else if (selectItem.isLevelUp() == true){
                     if (selectItem.isFirstSelectPressed((double) event.getX(), (double) event.getY())) {
                         selectItem.setLevelUp(false);
                     } else if (selectItem.isSecondSelectPressed((double) event.getX(), (double) event.getY())) {
                         selectItem.setLevelUp(false);
                     } else if (selectItem.isThirdSelectPressed((double) event.getX(), (double) event.getY())) {
                         selectItem.setLevelUp(false);
+                    }
+                }
+                // 게임 일시정지를 했을 때
+                else if (pauseMenu.isGamePauseMenu() == true) {
+                    if (pauseMenu.isFirstSelectPressed((double) event.getX(), (double) event.getY())) {
+                        pauseMenu.setGamePauseMenu(false);
+                    } else if (pauseMenu.isSecondSelectPressed((double) event.getX(), (double) event.getY())) {
+                        pauseMenu.setGamePauseMenu(false);
+                    } else if (pauseMenu.isThirdSelectPressed((double) event.getX(), (double) event.getY())) {
+                        onGameGiveupButtonPressed();
+                        pauseMenu.setGamePauseMenu(false);
                     }
                 }
                 return true;
@@ -165,6 +197,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 } else if (skillButtonPointerId == event.getPointerId(event.getActionIndex())) {
                     skillButton.setIsPressed(false);
                     onSkillButtonPressed();
+                } else if (gamePauseButtonPointerId == event.getPointerId(event.getActionIndex())) {
+                    gamePauseButton.setIsPressed(false);
+                    onGamePauseButtonPressed();
                 }
                 return true;
         }
@@ -181,7 +216,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         player.draw(canvas, camera);
 
         for (Enemy enemy : enemyList) {
-            enemy.draw(canvas, camera, selectItem);
+            enemy.draw(canvas, camera, selectItem, pauseMenu);
         }
 
         for (Spell spell : spellList) {
@@ -194,8 +229,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // 스킬버튼 그리기
         skillButton.draw(canvas);
 
+        // 게임 일시정지 메뉴 그리기
+        gamePauseButton.draw(canvas);
+
         //시간 출력
-        gameTimer.draw(canvas, selectItem);
+        gameTimer.draw(canvas, selectItem, pauseMenu);
 
         //경험치바 그리기
         expBar.draw(canvas);
@@ -208,11 +246,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         //레벨업하면 아이템창
         if (selectItem.isLevelUp())
             selectItem.draw(canvas, camera);
+
+        if (pauseMenu.isGamePauseMenu())
+            pauseMenu.draw(canvas, camera);
     }
 
     public void update() {
 
-        if (!selectItem.isLevelUp()) {
+        if (!selectItem.isLevelUp() && !pauseMenu.isGamePauseMenu()) {
             joystick.update();
             player.update();
 

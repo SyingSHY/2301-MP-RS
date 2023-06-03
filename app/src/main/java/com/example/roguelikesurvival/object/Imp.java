@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import com.example.roguelikesurvival.Camera;
 import com.example.roguelikesurvival.Game;
 import com.example.roguelikesurvival.GameLoop;
+import com.example.roguelikesurvival.PauseMenu;
 import com.example.roguelikesurvival.R;
 import com.example.roguelikesurvival.SelectItem;
 
@@ -75,9 +76,9 @@ public class Imp extends Enemy {
         }
     }
 
-    public void draw(Canvas canvas, Camera camera, SelectItem selectItem) {
-        // 레벨업시 아이템선택할때 이미지멈춤
-        if(!selectItem.isLevelUp()) {
+    public void draw(Canvas canvas, Camera camera, SelectItem selectItem, PauseMenu pauseMenu) {
+        // 레벨업시 아이템선택할때 & 일시정지 메뉴 실행 시 이미지 멈춤
+        if(!selectItem.isLevelUp() || !pauseMenu.isGamePauseMenu()) {
             updateBeforeNextMove--;
             if (updateBeforeNextMove == 0) {
                 updateBeforeNextMove = 5;

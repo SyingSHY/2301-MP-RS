@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 
 import androidx.core.content.ContextCompat;
 
+import com.example.roguelikesurvival.PauseMenu;
 import com.example.roguelikesurvival.R;
 import com.example.roguelikesurvival.SelectItem;
 
@@ -27,21 +28,21 @@ public class GameTimer {
         stopTime = 0;
     }
 
-    public void draw(Canvas canvas, SelectItem selectItem) {
-        //1.레벨업시 실행
-        if(selectItem.isLevelUp() && isStop == false && levelUpTime == 0) {
+    public void draw(Canvas canvas, SelectItem selectItem, PauseMenu pauseMenu) {
+        //1.레벨업 또는 일시정지 메뉴 클릭 시 실행
+        if((selectItem.isLevelUp() || pauseMenu.isGamePauseMenu()) && isStop == false && levelUpTime == 0) {
             isStop = true;
         }//3.멈춰있는 시간만큼 stopTime에 저장
-        else if(selectItem.isLevelUp() && isStop == false && levelUpTime != 0){
+        else if((selectItem.isLevelUp() || pauseMenu.isGamePauseMenu()) && isStop == false && levelUpTime != 0){
             stopTime = System.currentTimeMillis() - levelUpTime;
         }
         //2.레벨업한 시점의 시간을 저장
-        if(selectItem.isLevelUp() && isStop == true){
+        if((selectItem.isLevelUp() || pauseMenu.isGamePauseMenu()) && isStop == true){
             levelUpTime = System.currentTimeMillis();
             isStop = false;
         }
         //4.아이템선택이 끝나면 멈춘 시간만큼 startTime에 더하여 draw되는 시간이 멈추게함
-        if(!selectItem.isLevelUp()){
+        if(!(selectItem.isLevelUp() || pauseMenu.isGamePauseMenu())){
             startTime += stopTime;
             levelUpTime = 0;
             stopTime = 0;
