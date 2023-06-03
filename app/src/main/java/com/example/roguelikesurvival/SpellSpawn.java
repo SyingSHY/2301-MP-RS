@@ -1,5 +1,7 @@
 package com.example.roguelikesurvival;
 
+import android.graphics.Canvas;
+
 import com.example.roguelikesurvival.Camera;
 import com.example.roguelikesurvival.Game;
 import com.example.roguelikesurvival.Utils;
@@ -10,6 +12,7 @@ import com.example.roguelikesurvival.object.Enemy;
 import com.example.roguelikesurvival.object.Player;
 import com.example.roguelikesurvival.object.Spell;
 import com.example.roguelikesurvival.object.item.BasicAttack;
+import com.example.roguelikesurvival.object.item.RotateAttack;
 
 import java.util.Iterator;
 import java.util.concurrent.ThreadLocalRandom;
@@ -18,15 +21,29 @@ public class SpellSpawn {
     private Game game;
     private GameTimer gameTimer;
     private BasicAttack basicAttack;
+    private RotateAttack rotateAttack;
     private Player player;
+    private SelectItem selectItem;
     private int jobs;
 
-    public SpellSpawn(Game game, Player player, Camera camera, GameTimer gameTimer, int jobs, BasicAttack basicAttack) {
+    public SpellSpawn(Game game, Player player, Camera camera, GameTimer gameTimer, int jobs, SelectItem selectItem) {
         this.game = game;
         this.gameTimer = gameTimer;
         this.player = player;
         this.jobs = jobs;
-        this.basicAttack = basicAttack;
+        this.selectItem = selectItem;
+
+        basicAttack = new BasicAttack(game.getContext(), player, jobs, 20);
+        rotateAttack = selectItem.getRotateAttack();
+    }
+
+    public void draw(Canvas canvas, Camera camera){
+        //기본공격
+        if (basicAttack.getAnimationState() == true)
+            basicAttack.draw(canvas, camera);
+        //회전공격
+        if (rotateAttack.getAnimationState() == true)
+            rotateAttack.draw(canvas, camera);
     }
 
     public void update(Camera camera, ExpBar expBar) {
@@ -107,6 +124,27 @@ public class SpellSpawn {
                 if (Utils.getDistanceBetweenPoints(spell.getPositionX(), spell.getPositionY(), player.getPositionX(), player.getPositionY()) > 1500) {
                     iteratorSpell.remove();
                     break;
+                }
+            }
+        }
+
+        //회전공격
+        if(rotateAttack.getIsSelect()) {
+            while (rotateAttack.readyToAttack()) {
+                rotateAttack.startAnimationState();
+            }
+            Iterator<Enemy> iteratorEnemy = game.enemyList.iterator();
+            while (iteratorEnemy.hasNext()) {
+                Enemy enemy = iteratorEnemy.next();
+                if (rotateAttack.getDamageState() == true && rotateAttack.withinAttackDistance(camera, enemy)) {
+                    enemy.setHealthPoint(enemy.getHealthPoint() - selectItem.getItemAttackPower());
+                    enemy.setHitImage(true);
+                }
+
+                //체력 0이하면 몬스터 제거
+                if (enemy.getHealthPoint() <= 0) {
+                    iteratorEnemy.remove();
+                    expBar.plusExpPoint(1);
                 }
             }
         }

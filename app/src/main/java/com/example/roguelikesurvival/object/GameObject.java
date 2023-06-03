@@ -23,7 +23,7 @@ public abstract class GameObject {
     public abstract void update();
 
     //두 object간의 거리 구하기
-    protected static double getDistanceBetweenObject(GameObject obj1, GameObject obj2) {
+    public static double getDistanceBetweenObject(GameObject obj1, GameObject obj2) {
         return Math.sqrt(Math.pow(obj2.getPositionX() - obj1.getPositionX(), 2) +
                 Math.pow(obj2.getPositionY() - obj1.getPositionY(), 2));
     }

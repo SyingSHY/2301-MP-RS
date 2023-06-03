@@ -49,7 +49,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private SpellSpawn spellSpawn;
     private GameTimer gameTimer;
     private ExpBar expBar;
-    private BasicAttack basicAttack;
     private SelectItem selectItem;
     private PlayerState playerState;
 
@@ -97,28 +96,25 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         else
             player = new Wizzard(getContext(), joystick, 500, 500, 30, enemyList);
 
-        //기본공격 설정
-        basicAttack = new BasicAttack(context, player, jobs, 20);
-
         //배경 설정
         background = new InfiniteBackground(context, player);
 
+        // 아이템 선택창 설정
+        selectItem = new SelectItem(context, player, camera);
+
         //스포너 설정
         enemySpawn = new EnemySpawn(this, player, camera, gameTimer);
-        spellSpawn = new SpellSpawn(this, player, camera, gameTimer, jobs, basicAttack);
+        spellSpawn = new SpellSpawn(this, player, camera, gameTimer, jobs, selectItem);
 
         //카메라 시점을 플레이어가 중앙에 오게 설정
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics((displayMetrics));
         camera = new Camera(displayMetrics.widthPixels, displayMetrics.heightPixels, player);
 
-        // 아이템 선택창 설정
-        selectItem = new SelectItem(context, player, camera);
-
         //경험치바 설정
         expBar = new ExpBar(context, player, selectItem);
 
-        playerState = new PlayerState(context, player);
+        playerState = new PlayerState(context, player, selectItem);
 
         setFocusable(true);
     }
@@ -204,11 +200,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         //경험치바 그리기
         expBar.draw(canvas);
 
+        //플레이어 스텟 그리기
         playerState.draw(canvas);
 
-        //기본공격
-        if (basicAttack.getAnimationState() == true)
-            basicAttack.draw(canvas, camera);
+        spellSpawn.draw(canvas, camera);
 
         //레벨업하면 아이템창
         if (selectItem.isLevelUp())

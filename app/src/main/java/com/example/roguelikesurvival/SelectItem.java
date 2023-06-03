@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat;
 import com.example.roguelikesurvival.object.Player;
 import com.example.roguelikesurvival.object.item.PlusAtk;
 import com.example.roguelikesurvival.object.item.PlusHp;
+import com.example.roguelikesurvival.object.item.RotateAttack;
 
 import java.util.Random;
 
@@ -22,6 +23,7 @@ public class SelectItem {
     private static final float BACKGROUND_SPRITE_HEIGHT = 917;
     private static final float BORDER_SPRITE_WIDTH = 574;
     private static final float BORDER_SPRITE_HEIGHT = 169;
+    private static final int NUMBER_OF_ITEMS = 4;
     private float selectPosX;
     private float firstSelectPosY;
     private float secondSelectPosY;
@@ -29,7 +31,7 @@ public class SelectItem {
     private Context context;
     private Player player;
     private Bitmap backgroudBitmap = null;
-    private Bitmap[] itemBitmap = new Bitmap[3];
+    private Bitmap[] itemBitmap = new Bitmap[NUMBER_OF_ITEMS];
     private int[] randomItem = new int[3];
     boolean levelUp = false;
     boolean setRandom = false;
@@ -40,6 +42,8 @@ public class SelectItem {
 
     private PlusHp plusHp;
     private PlusAtk plusAtk;
+    private RotateAttack rotateAttack;
+    private int itemAttackPower = 1;
 
     public SelectItem(Context context, Player player, Camera camera) {
 
@@ -68,10 +72,12 @@ public class SelectItem {
         backgroudBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.select_item_background, bitmapOptions);
         itemBitmap[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_plus_hp_select, bitmapOptions);
         itemBitmap[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_plus_atk_select, bitmapOptions);
-        itemBitmap[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_blank_select, bitmapOptions);
+        itemBitmap[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_rotate_attack_select, bitmapOptions);
+        itemBitmap[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_blank_select, bitmapOptions);
 
         plusHp = new PlusHp(context, player, itemBitmap[0]);
         plusAtk = new PlusAtk(context, player, itemBitmap[1]);
+        rotateAttack = new RotateAttack(context, player, itemBitmap[2]);
     }
 
     public void draw(Canvas canvas, Camera camera) {
@@ -80,7 +86,7 @@ public class SelectItem {
         if(setRandom) {
             Random r = new Random();
             for (int i = 0; i < 3; i++) {
-                randomItem[i] = r.nextInt(3);
+                randomItem[i] = r.nextInt(NUMBER_OF_ITEMS);
                 for (int j = 0; j < i; j++) {
                     if (randomItem[i] == randomItem[j])
                         i--;
@@ -140,22 +146,37 @@ public class SelectItem {
             canvas.drawText("공격력증가", posX + 150, posY + 75, name);
             canvas.drawText("공격력을 2 증가시킵니다.", posX + 150, posY + 115, explain);
         }
+        else if(select.equals(rotateAttack.getBitmap())){
+            canvas.drawText("회전공격", posX + 150, posY + 75, name);
+            if(!rotateAttack.getIsSelect())
+                canvas.drawText("5초마다 회전공격을 합니다.", posX + 150, posY + 115, explain);
+            else{
+                canvas.drawText("아이템공격력을 2 증가시킵니다.", posX + 150, posY + 115, explain);
+            }
+        }
     }
 
     //아이템 선택 메서드
-    public void updateItem(Bitmap select, PlusHp plusHp, PlusAtk plusAtk){
+    public void updateItem(Bitmap select, PlusHp plusHp, PlusAtk plusAtk, RotateAttack rotateAttack){
         if(select.equals(plusHp.getBitmap())){
             plusHp.isSelect();
         }
         else if(select.equals(plusAtk.getBitmap())){
             plusAtk.isSelect();
         }
+        else if(select.equals(rotateAttack.getBitmap())){
+            if(!rotateAttack.getIsSelect())
+                rotateAttack.isSelect();
+            else {
+                plusItemAttackPower(2);
+            }
+        }
     }
 
     public boolean isFirstSelectPressed(double touchPosX, double touchPosY) {
         if((touchPosX > selectPosX && touchPosX < (selectPosX + BORDER_SPRITE_WIDTH))
                 && (touchPosY > firstSelectPosY && touchPosY < (firstSelectPosY + BORDER_SPRITE_HEIGHT))){
-            updateItem(itemBitmap[randomItem[0]], plusHp, plusAtk);
+            updateItem(itemBitmap[randomItem[0]], plusHp, plusAtk, rotateAttack);
             return true;
         }
         else return  false;
@@ -164,7 +185,7 @@ public class SelectItem {
     public boolean isSecondSelectPressed(double touchPosX, double touchPosY) {
         if((touchPosX > selectPosX && touchPosX < (selectPosX + BORDER_SPRITE_WIDTH))
                 && (touchPosY > secondSelectPosY && touchPosY < (secondSelectPosY + BORDER_SPRITE_HEIGHT))){
-            updateItem(itemBitmap[randomItem[1]], plusHp, plusAtk);
+            updateItem(itemBitmap[randomItem[1]], plusHp, plusAtk, rotateAttack);
             return true;
         }
         else return  false;
@@ -173,9 +194,21 @@ public class SelectItem {
     public boolean isThirdSelectPressed(double touchPosX, double touchPosY) {
         if((touchPosX > selectPosX && touchPosX < (selectPosX + BORDER_SPRITE_WIDTH))
                 && (touchPosY > thirdSelectPosY && touchPosY < (thirdSelectPosY + BORDER_SPRITE_HEIGHT))){
-            updateItem(itemBitmap[randomItem[2]], plusHp, plusAtk);
+            updateItem(itemBitmap[randomItem[2]], plusHp, plusAtk, rotateAttack);
             return true;
         }
         else return  false;
+    }
+
+    public RotateAttack getRotateAttack(){
+        return rotateAttack;
+    }
+
+    public int getItemAttackPower(){
+        return itemAttackPower;
+    }
+
+    public void plusItemAttackPower(int attackpower){
+        itemAttackPower += attackpower;
     }
 }

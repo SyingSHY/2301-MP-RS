@@ -107,8 +107,7 @@ public class BasicAttack extends Spell {
             updateBeforeNextAttack = 5;
             if (moveIdx == 0) {
                 moveIdx++;
-            }
-            else if (moveIdx == 1)
+            } else if (moveIdx == 1)
                 moveIdx++;
             else if (moveIdx == 2)
                 moveIdx++;
@@ -183,17 +182,17 @@ public class BasicAttack extends Spell {
     public void startAnimationState() {
         animationState = true;
         damageState = true;
-
     }
 
     public boolean getAnimationState() {
         return animationState;
     }
 
-    public boolean getDamageState(){
+    public boolean getDamageState() {
         return damageState;
     }
-    public void setDamageState(boolean state){
+
+    public void setDamageState(boolean state) {
         damageState = state;
     }
 }
