@@ -160,12 +160,16 @@ public class Imp extends Enemy {
 
         //플레이어쪽으로 적 이동시키기
         if (distanceToPlayer > 0 && isFrozen() == false) {
-            velocityX = (directionX + avoidanceX * AVOID_POWER) * MAX_SPEED;
-            velocityY = (directionY + avoidanceY * AVOID_POWER) * MAX_SPEED;
+            velocityX = (directionX * MAX_SPEED + avoidanceX * AVOID_POWER);
+            velocityY = (directionY * MAX_SPEED + avoidanceY * AVOID_POWER);
         } else {
             velocityX = 0;
             velocityY = 0;
         }
+
+        // Avoidance에 의한 스프라이트 떨림 현상 및 오브젝트 밀림 방지 : 항상 플레이어를 바라보도록 velocityX 수정
+        if (switchAvoid && ((velocityX / directionX) < 0)) velocityX = directionX * Double.MIN_VALUE;
+
         positionX += velocityX;
         positionY += velocityY;
     }
