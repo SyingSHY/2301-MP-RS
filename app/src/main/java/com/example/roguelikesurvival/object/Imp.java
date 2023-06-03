@@ -28,6 +28,8 @@ public class Imp extends Enemy {
     private static final float SPRITE_HEIGHT = 95;
     private int healthPoint = 1;
     private boolean hitImage = false;
+    private boolean switchAvoid = false;
+    private int switchAvoidCount = 30;
     private final Player player;
 
     private Bitmap[] bitmap = new Bitmap[6];
@@ -129,14 +131,22 @@ public class Imp extends Enemy {
         double avoidanceX = 0;
         double avoidanceY = 0;
 
-        for (Enemy enemy : enemyList) {
-            double avoidanceDist = GameObject.getDistanceBetweenObject(this, enemy);
+        if (switchAvoid) {
+            for (Enemy enemy : enemyList) {
+                double avoidanceDist = GameObject.getDistanceBetweenObject(this, enemy);
 
-            if (avoidanceDist != 0f) {
-                avoidanceX -= (1 / (enemy.getPositionX() - positionX));
-                avoidanceY -= (1 / (enemy.getPositionY() - positionY));
+                if (avoidanceDist != 0f) {
+                    avoidanceX -= (1 / (enemy.getPositionX() - positionX));
+                    avoidanceY -= (1 / (enemy.getPositionY() - positionY));
+                }
             }
         }
+
+        if (switchAvoidCount == 30) {
+            switchAvoid = !switchAvoid;
+            switchAvoidCount = 0;
+        }
+        else switchAvoidCount++;
 
 
         //플레이어와 적사이의 거리 구하기
