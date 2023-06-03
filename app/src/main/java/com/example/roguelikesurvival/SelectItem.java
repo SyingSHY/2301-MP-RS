@@ -6,10 +6,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
 import com.example.roguelikesurvival.object.Player;
+import com.example.roguelikesurvival.object.item.PlusAtk;
+import com.example.roguelikesurvival.object.item.PlusHp;
 
 import java.util.Random;
 
@@ -31,6 +34,9 @@ public class SelectItem {
     boolean levelUp = false;
     boolean setRandom = false;
 
+    private PlusHp plusHp;
+    private PlusAtk plusAtk;
+
     public SelectItem(Context context, Player player, Camera camera) {
 
         this.context = context;
@@ -42,6 +48,9 @@ public class SelectItem {
         itemBitmap[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_plus_hp_select, bitmapOptions);
         itemBitmap[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_plus_atk_select, bitmapOptions);
         itemBitmap[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_blank_select, bitmapOptions);
+
+        plusHp = new PlusHp(context, player, itemBitmap[0]);
+        plusAtk = new PlusAtk(context, player, itemBitmap[1]);
     }
 
     public void draw(Canvas canvas, Camera camera) {
@@ -115,9 +124,20 @@ public class SelectItem {
         setRandom = true;
     }
 
+    //아이템 선택 메서드
+    public void updateItem(Bitmap select, PlusHp plusHp, PlusAtk plusAtk){
+        if(select.equals(plusHp.getBitmap())){
+            plusHp.isSelect();
+        }
+        else if(select.equals(plusAtk.getBitmap())){
+            plusAtk.isSelect();
+        }
+    }
+
     public boolean isFirstSelectPressed(double touchPosX, double touchPosY) {
         if((touchPosX > selectPosX && touchPosX < (selectPosX + BORDER_SPRITE_WIDTH))
                 && (touchPosY > firstSelectPosY && touchPosY < (firstSelectPosY + BORDER_SPRITE_HEIGHT))){
+            updateItem(itemBitmap[randomItem[0]], plusHp, plusAtk);
             return true;
         }
         else return  false;
@@ -126,6 +146,7 @@ public class SelectItem {
     public boolean isSecondSelectPressed(double touchPosX, double touchPosY) {
         if((touchPosX > selectPosX && touchPosX < (selectPosX + BORDER_SPRITE_WIDTH))
                 && (touchPosY > secondSelectPosY && touchPosY < (secondSelectPosY + BORDER_SPRITE_HEIGHT))){
+            updateItem(itemBitmap[randomItem[1]], plusHp, plusAtk);
             return true;
         }
         else return  false;
@@ -134,6 +155,7 @@ public class SelectItem {
     public boolean isThirdSelectPressed(double touchPosX, double touchPosY) {
         if((touchPosX > selectPosX && touchPosX < (selectPosX + BORDER_SPRITE_WIDTH))
                 && (touchPosY > thirdSelectPosY && touchPosY < (thirdSelectPosY + BORDER_SPRITE_HEIGHT))){
+            updateItem(itemBitmap[randomItem[2]], plusHp, plusAtk);
             return true;
         }
         else return  false;

@@ -163,6 +163,7 @@ public class Knight extends Player {
 
     public void plusMaxHealthPoint(int point) {
         maxHealthPoint += point;
+        healthPoint += point;
     }
 
     public int getHealthPoint() {

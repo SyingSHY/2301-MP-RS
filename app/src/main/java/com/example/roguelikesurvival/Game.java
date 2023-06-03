@@ -16,6 +16,7 @@ import com.example.roguelikesurvival.gamepanel.ExpBar;
 import com.example.roguelikesurvival.gamepanel.InfiniteBackground;
 import com.example.roguelikesurvival.gamepanel.Joystick;
 import com.example.roguelikesurvival.gamepanel.Performance;
+import com.example.roguelikesurvival.gamepanel.PlayerState;
 import com.example.roguelikesurvival.gamepanel.ReStart;
 import com.example.roguelikesurvival.gamepanel.GameTimer;
 import com.example.roguelikesurvival.gamepanel.SkillButton;
@@ -50,6 +51,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private ExpBar expBar;
     private BasicAttack basicAttack;
     private SelectItem selectItem;
+    private PlayerState playerState;
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
@@ -115,6 +117,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         //경험치바 설정
         expBar = new ExpBar(context, player, selectItem);
+
+        playerState = new PlayerState(context, player);
 
         setFocusable(true);
     }
@@ -199,6 +203,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         //경험치바 그리기
         expBar.draw(canvas);
+
+        playerState.draw(canvas);
 
         //기본공격
         if (basicAttack.getAnimationState() == true)

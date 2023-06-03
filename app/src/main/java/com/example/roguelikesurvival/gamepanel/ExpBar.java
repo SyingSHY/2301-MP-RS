@@ -62,7 +62,7 @@ public class ExpBar {
         int color = ContextCompat.getColor(context, R.color.white);
         paint.setColor(color);
         paint.setTextSize(50);
-        canvas.drawText("Level: " + player.getLevel(), 100, 90, paint);
+        canvas.drawText("Level: " + player.getLevel(), 10, 90, paint);
     }
 
     public void update(){

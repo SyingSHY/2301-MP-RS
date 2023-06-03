@@ -168,6 +168,7 @@ public class Wizzard extends Player {
 
     public void plusMaxHealthPoint(int point) {
         maxHealthPoint += point;
+        healthPoint += point;
     }
 
     public int getHealthPoint() {
