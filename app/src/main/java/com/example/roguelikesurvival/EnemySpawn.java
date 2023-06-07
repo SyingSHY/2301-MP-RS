@@ -34,11 +34,13 @@ public class EnemySpawn {
     private double spawnPositionY;
     private boolean isDamage = false;
     private boolean damageDelay = false;
+    private int jobs;
 
-    public EnemySpawn(Game game, Player player, Camera camera, GameTimer gameTimer) {
+    public EnemySpawn(Game game, Player player, Camera camera, GameTimer gameTimer, int jobs) {
         this.game = game;
         this.gameTimer = gameTimer;
         this.player = player;
+        this.jobs = jobs;
 
         goblin = new Goblin(game.getContext(), player, camera, 0, 0, 30);
         orc = new Orc((game.getContext()), player, camera, 0, 0, 30);
@@ -119,8 +121,15 @@ public class EnemySpawn {
         while (iteratorEnemy.hasNext()) {
             Enemy enemy = iteratorEnemy.next();
             if (Circle.isColliding(enemy, player)) {
-                if (!player.isUsingSkill() && damageDelay == false) {
-                    isDamage = true;
+                if(jobs == 0) {
+                    if (!player.isUsingSkill() && damageDelay == false) {
+                        isDamage = true;
+                    }
+                }
+                else if(jobs == 1){
+                    if (damageDelay == false) {
+                        isDamage = true;
+                    }
                 }
                 if (isDamage) {
                     player.setHealthPoint(player.getHealthPoint() - 1);

@@ -39,6 +39,7 @@ public class Muddy extends Enemy {
     // 이미지 애니메이션 속도 설정
     private int updateBeforeNextMove = 5;
     private int moveIdx = 0;
+    private int dir;
 
     public Muddy(Context context, Player player, Camera camera, double spawnPositionX, double spawnPositionY, int radius) {
         super(context, player, camera, spawnPositionX, spawnPositionY, radius);
@@ -79,7 +80,7 @@ public class Muddy extends Enemy {
 
     public void draw(Canvas canvas, Camera camera, SelectItem selectItem, PauseMenu pauseMenu) {
         // 레벨업시 아이템선택할때 & 일시정지 메뉴 실행 시 이미지 멈춤
-        if(!selectItem.isLevelUp() || !pauseMenu.isGamePauseMenu()) {
+        if (!selectItem.isLevelUp() && !pauseMenu.isGamePauseMenu()) {
             updateBeforeNextMove--;
             if (updateBeforeNextMove == 0) {
                 updateBeforeNextMove = 5;
@@ -95,15 +96,14 @@ public class Muddy extends Enemy {
         }
 
         // 적의 방향을 체크하여 이미지 방향 결정
-        if(isFrozen()==true){
-            if (velocityX > 0)
+        if (isFrozen() == true) {
+            if (dir == 0)
                 canvas.drawBitmap(bitmap[5], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
                         (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-            else
+            else if (dir == 1)
                 canvas.drawBitmap(bitmapL[5], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
                         (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
-        }
-        else if (velocityX > 0)
+        } else if (velocityX > 0)
             canvas.drawBitmap(bitmap[moveIdx], (float) camera.gameToScreenCoordinateX(positionX) - (SPRITE_WIDTH / 2),
                     (float) camera.gameToScreenCoordinateY(positionY) - (SPRITE_HEIGHT / 2), null);
         else
@@ -146,8 +146,7 @@ public class Muddy extends Enemy {
         if (switchAvoidCount == 30) {
             switchAvoid = !switchAvoid;
             switchAvoidCount = 0;
-        }
-        else switchAvoidCount++;
+        } else switchAvoidCount++;
 
 
         //플레이어와 적사이의 거리 구하기
@@ -159,8 +158,15 @@ public class Muddy extends Enemy {
         double directionX = distanceToPlayerX / distanceToPlayer;
         double directionY = distanceToPlayerY / distanceToPlayer;
 
+        if (isFrozen() == false) {
+            if (directionX > 0)
+                dir = 0;
+            else
+                dir = 1;
+        }
+
         //플레이어쪽으로 적 이동시키기
-        if (distanceToPlayer > 0 && isFrozen()==false) {
+        if (distanceToPlayer > 0 && isFrozen() == false) {
             velocityX = (directionX * MAX_SPEED + avoidanceX * AVOID_POWER);
             velocityY = (directionY * MAX_SPEED + avoidanceY * AVOID_POWER);
         } else {
@@ -169,7 +175,8 @@ public class Muddy extends Enemy {
         }
 
         // Avoidance에 의한 스프라이트 떨림 현상 및 오브젝트 밀림 방지 : 항상 플레이어를 바라보도록 velocityX 수정
-        if (switchAvoid && ((velocityX / directionX) < 0)) velocityX = directionX * Double.MIN_VALUE;
+        if (switchAvoid && ((velocityX / directionX) < 0))
+            velocityX = directionX * Double.MIN_VALUE;
 
         positionX += velocityX;
         positionY += velocityY;
@@ -188,6 +195,6 @@ public class Muddy extends Enemy {
     }
 
     public void setHealthPoint(int healthPoint) {
-            this.healthPoint = healthPoint;
+        this.healthPoint = healthPoint;
     }
 }

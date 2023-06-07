@@ -121,7 +121,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         pauseMenu = new PauseMenu(context, player, camera);
 
         //스포너 설정
-        enemySpawn = new EnemySpawn(this, player, camera, gameTimer);
+        enemySpawn = new EnemySpawn(this, player, camera, gameTimer, jobs);
         spellSpawn = new SpellSpawn(this, player, camera, gameTimer, jobs, selectItem);
 
         //카메라 시점을 플레이어가 중앙에 오게 설정
