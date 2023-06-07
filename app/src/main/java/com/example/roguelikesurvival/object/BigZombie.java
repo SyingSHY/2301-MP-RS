@@ -16,7 +16,7 @@ import com.example.roguelikesurvival.SelectItem;
 import java.util.List;
 
 public class BigZombie extends Enemy {
-    private static final double SPEED_PIXELS_PER_SECOND = Player.SPEED_PIXELS_PER_SECOND * 0.2;
+    private static final double SPEED_PIXELS_PER_SECOND = 70;
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
     private static final double AVOID_POWER = 5;
 
@@ -29,6 +29,8 @@ public class BigZombie extends Enemy {
     private static final float SPRITE_HEIGHT = 204;
     private int healthPoint = 1;
     private boolean hitImage = false;
+    private boolean switchAvoid = false;
+    private int switchAvoidCount = 30;
     private final Player player;
 
     private Bitmap[] bitmap = new Bitmap[6];
@@ -130,14 +132,22 @@ public class BigZombie extends Enemy {
         double avoidanceX = 0;
         double avoidanceY = 0;
 
-        for (Enemy enemy : enemyList) {
-            double avoidanceDist = GameObject.getDistanceBetweenObject(this, enemy);
+        if (switchAvoid) {
+            for (Enemy enemy : enemyList) {
+                double avoidanceDist = GameObject.getDistanceBetweenObject(this, enemy);
 
-            if (avoidanceDist != 0f) {
-                avoidanceX -= (1 / (enemy.getPositionX() - positionX));
-                avoidanceY -= (1 / (enemy.getPositionY() - positionY));
+                if (avoidanceDist != 0f) {
+                    avoidanceX -= (1 / (enemy.getPositionX() - positionX));
+                    avoidanceY -= (1 / (enemy.getPositionY() - positionY));
+                }
             }
         }
+
+        if (switchAvoidCount == 30) {
+            switchAvoid = !switchAvoid;
+            switchAvoidCount = 0;
+        }
+        else switchAvoidCount++;
 
 
         //플레이어와 적사이의 거리 구하기
@@ -151,12 +161,16 @@ public class BigZombie extends Enemy {
 
         //플레이어쪽으로 적 이동시키기
         if (distanceToPlayer > 0 && isFrozen()==false) {
-            velocityX = (directionX + avoidanceX * AVOID_POWER) * MAX_SPEED;
-            velocityY = (directionY + avoidanceY * AVOID_POWER) * MAX_SPEED;
+            velocityX = (directionX * MAX_SPEED + avoidanceX * AVOID_POWER);
+            velocityY = (directionY * MAX_SPEED + avoidanceY * AVOID_POWER);
         } else {
             velocityX = 0;
             velocityY = 0;
         }
+
+        // Avoidance에 의한 스프라이트 떨림 현상 및 오브젝트 밀림 방지 : 항상 플레이어를 바라보도록 velocityX 수정
+        if (switchAvoid && ((velocityX / directionX) < 0)) velocityX = directionX * Double.MIN_VALUE;
+
         positionX += velocityX;
         positionY += velocityY;
     }

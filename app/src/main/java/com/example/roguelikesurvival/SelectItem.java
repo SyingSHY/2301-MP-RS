@@ -13,6 +13,8 @@ import androidx.core.content.ContextCompat;
 import com.example.roguelikesurvival.object.Player;
 import com.example.roguelikesurvival.object.item.PlusAtk;
 import com.example.roguelikesurvival.object.item.PlusHp;
+import com.example.roguelikesurvival.object.item.PlusSpeed;
+import com.example.roguelikesurvival.object.item.RecoverHp;
 import com.example.roguelikesurvival.object.item.RotateAttack;
 
 import java.util.Random;
@@ -23,7 +25,7 @@ public class SelectItem {
     private static final float BACKGROUND_SPRITE_HEIGHT = 917;
     private static final float BORDER_SPRITE_WIDTH = 574;
     private static final float BORDER_SPRITE_HEIGHT = 169;
-    private static final int NUMBER_OF_ITEMS = 4;
+    private static final int NUMBER_OF_ITEMS = 5;
     private float selectPosX;
     private float firstSelectPosY;
     private float secondSelectPosY;
@@ -43,6 +45,8 @@ public class SelectItem {
     private PlusHp plusHp;
     private PlusAtk plusAtk;
     private RotateAttack rotateAttack;
+    private PlusSpeed plusSpeed;
+    private RecoverHp recoverHp;
     private int itemAttackPower = 1;
 
     public SelectItem(Context context, Player player, Camera camera) {
@@ -73,11 +77,14 @@ public class SelectItem {
         itemBitmap[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_plus_hp_select, bitmapOptions);
         itemBitmap[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_plus_atk_select, bitmapOptions);
         itemBitmap[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_rotate_attack_select, bitmapOptions);
-        itemBitmap[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_blank_select, bitmapOptions);
+        itemBitmap[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_plus_speed_select, bitmapOptions);
+        itemBitmap[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_recover_hp_select, bitmapOptions);
 
         plusHp = new PlusHp(context, player, itemBitmap[0]);
         plusAtk = new PlusAtk(context, player, itemBitmap[1]);
         rotateAttack = new RotateAttack(context, player, itemBitmap[2]);
+        plusSpeed = new PlusSpeed(context, player, itemBitmap[3]);
+        recoverHp = new RecoverHp(context, player, itemBitmap[4]);
     }
 
     public void draw(Canvas canvas, Camera camera) {
@@ -112,9 +119,9 @@ public class SelectItem {
         //레벨업 메세지
         canvas.drawText("레벨업!", selectPosX + 195, firstSelectPosY - 90, levelUpMessage);
         //아이템 설명 출력
-        explainItem(canvas, itemBitmap[randomItem[0]], plusHp, plusAtk, selectPosX, firstSelectPosY);
-        explainItem(canvas, itemBitmap[randomItem[1]], plusHp, plusAtk, selectPosX, secondSelectPosY);
-        explainItem(canvas, itemBitmap[randomItem[2]], plusHp, plusAtk, selectPosX, thirdSelectPosY);
+        explainItem(canvas, itemBitmap[randomItem[0]], plusHp, plusAtk, plusSpeed, recoverHp, selectPosX, firstSelectPosY);
+        explainItem(canvas, itemBitmap[randomItem[1]], plusHp, plusAtk, plusSpeed, recoverHp, selectPosX, secondSelectPosY);
+        explainItem(canvas, itemBitmap[randomItem[2]], plusHp, plusAtk, plusSpeed, recoverHp, selectPosX, thirdSelectPosY);
 
     }
 
@@ -137,7 +144,7 @@ public class SelectItem {
     }
 
     //아이템 설명
-    public void explainItem(Canvas canvas, Bitmap select, PlusHp plusHp, PlusAtk plusAtk, float posX, float posY){
+    public void explainItem(Canvas canvas, Bitmap select, PlusHp plusHp, PlusAtk plusAtk, PlusSpeed plusSpeed, RecoverHp recoverHp, float posX, float posY){
         if(select.equals(plusHp.getBitmap())){
             canvas.drawText("체력증가", posX + 150, posY + 75, name);
             canvas.drawText("체력을 2 증가시킵니다.", posX + 150, posY + 115, explain);
@@ -154,10 +161,18 @@ public class SelectItem {
                 canvas.drawText("아이템공격력을 2 증가시킵니다.", posX + 150, posY + 115, explain);
             }
         }
+        else if(select.equals(plusSpeed.getBitmap())){
+            canvas.drawText("속도증가", posX + 150, posY + 75, name);
+            canvas.drawText("속도를 20 증가시킵니다.", posX + 150, posY + 115, explain);
+        }
+        else if(select.equals(recoverHp.getBitmap())){
+            canvas.drawText("체력회복", posX + 150, posY + 75, name);
+            canvas.drawText("체력을 max로 회복시킵니다.", posX + 150, posY + 115, explain);
+        }
     }
 
     //아이템 선택 메서드
-    public void updateItem(Bitmap select, PlusHp plusHp, PlusAtk plusAtk, RotateAttack rotateAttack){
+    public void updateItem(Bitmap select, PlusHp plusHp, PlusAtk plusAtk, RotateAttack rotateAttack, PlusSpeed plusSpeed, RecoverHp recoverHp){
         if(select.equals(plusHp.getBitmap())){
             plusHp.isSelect();
         }
@@ -171,12 +186,18 @@ public class SelectItem {
                 plusItemAttackPower(2);
             }
         }
+        else if(select.equals(plusSpeed.getBitmap())){
+            plusSpeed.isSelect();
+        }
+        else if(select.equals(recoverHp.getBitmap())){
+            recoverHp.isSelect();
+        }
     }
 
     public boolean isFirstSelectPressed(double touchPosX, double touchPosY) {
         if((touchPosX > selectPosX && touchPosX < (selectPosX + BORDER_SPRITE_WIDTH))
                 && (touchPosY > firstSelectPosY && touchPosY < (firstSelectPosY + BORDER_SPRITE_HEIGHT))){
-            updateItem(itemBitmap[randomItem[0]], plusHp, plusAtk, rotateAttack);
+            updateItem(itemBitmap[randomItem[0]], plusHp, plusAtk, rotateAttack, plusSpeed, recoverHp);
             return true;
         }
         else return  false;
@@ -185,7 +206,7 @@ public class SelectItem {
     public boolean isSecondSelectPressed(double touchPosX, double touchPosY) {
         if((touchPosX > selectPosX && touchPosX < (selectPosX + BORDER_SPRITE_WIDTH))
                 && (touchPosY > secondSelectPosY && touchPosY < (secondSelectPosY + BORDER_SPRITE_HEIGHT))){
-            updateItem(itemBitmap[randomItem[1]], plusHp, plusAtk, rotateAttack);
+            updateItem(itemBitmap[randomItem[1]], plusHp, plusAtk, rotateAttack, plusSpeed, recoverHp);
             return true;
         }
         else return  false;
@@ -194,7 +215,7 @@ public class SelectItem {
     public boolean isThirdSelectPressed(double touchPosX, double touchPosY) {
         if((touchPosX > selectPosX && touchPosX < (selectPosX + BORDER_SPRITE_WIDTH))
                 && (touchPosY > thirdSelectPosY && touchPosY < (thirdSelectPosY + BORDER_SPRITE_HEIGHT))){
-            updateItem(itemBitmap[randomItem[2]], plusHp, plusAtk, rotateAttack);
+            updateItem(itemBitmap[randomItem[2]], plusHp, plusAtk, rotateAttack, plusSpeed, recoverHp);
             return true;
         }
         else return  false;

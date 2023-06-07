@@ -28,6 +28,7 @@ public abstract class Player extends Circle {
     public Player(Context context, Joystick joystick, double positionX, double positionY, double radius) {
         super(context, ContextCompat.getColor(context, R.color.player), positionX, positionY, radius);
     }
+
     public boolean isUsingSkill() {
         return isUsingSkill;
     }
@@ -37,17 +38,28 @@ public abstract class Player extends Circle {
     public abstract void draw(Canvas canvas, Camera camera);
 
     public abstract int getMaxHealthPoint();
+
     public abstract void plusMaxHealthPoint(int point);
+
     public abstract int getHealthPoint();
+
     public abstract int getAttackPower();
+
     public abstract void plusAttackPower(int point);
 
+    public abstract void plusSpeed(int point);
+
+    public abstract double getSpeed();
+
     public abstract void setHealthPoint(int healthPoint);
+
     public abstract void levelUp();
+
     public abstract int getLevel();
+
     public abstract boolean isDamage();
 
-    public void useSkill(){
+    public void useSkill() {
 
     }
 }

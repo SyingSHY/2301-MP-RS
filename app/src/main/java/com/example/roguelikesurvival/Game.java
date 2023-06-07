@@ -101,9 +101,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         //게임 패널 초기화
         performance = new Performance(context, gameLoop);
-        joystick = new Joystick(170, 800, 100, 60);
-        skillButton = new SkillButton(1500, 800, 50, this);
-        gamePauseButton = new GamePauseButton(context, 1500, 140, this);
+        joystick = new Joystick(170, 900, 100, 60);
+        skillButton = new SkillButton(1700, 900, 50, this);
+        gamePauseButton = new GamePauseButton(context, 1800, 60, this);
 
         //오브젝트 초기설정
         if (jobs == 0)
@@ -153,6 +153,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                         skillButtonPointerId = event.getPointerId(event.getActionIndex());
                         skillButton.setIsPressed(true);
                         player.useSkill();
+                    } else if (playerState.isShowState((double) event.getX(), (double) event.getY())) {
+                        playerState.setShowState();
+
                     } else if (gamePauseButton.isPressed((double) event.getX(), (double) event.getY())) {
                         gamePauseButtonPointerId = event.getPointerId(event.getActionIndex());
                         gamePauseButton.setIsPressed(true);
@@ -161,7 +164,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                     }
                 }
                 // 레벨업을 했을때
-                else if (selectItem.isLevelUp() == true){
+                else if (selectItem.isLevelUp() == true) {
                     if (selectItem.isFirstSelectPressed((double) event.getX(), (double) event.getY())) {
                         selectItem.setLevelUp(false);
                     } else if (selectItem.isSecondSelectPressed((double) event.getX(), (double) event.getY())) {

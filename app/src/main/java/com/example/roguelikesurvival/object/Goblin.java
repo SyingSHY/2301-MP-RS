@@ -16,7 +16,7 @@ import com.example.roguelikesurvival.SelectItem;
 import java.util.List;
 
 public class Goblin extends Enemy {
-    private static final double SPEED_PIXELS_PER_SECOND = Player.SPEED_PIXELS_PER_SECOND * 0.2;
+    private static final double SPEED_PIXELS_PER_SECOND = 70;
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
     private static final double AVOID_POWER = 5;
 

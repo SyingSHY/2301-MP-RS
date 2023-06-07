@@ -18,8 +18,8 @@ import com.example.roguelikesurvival.gamepanel.HealthBar;
 import com.example.roguelikesurvival.gamepanel.Joystick;
 
 public class Knight extends Player {
-    public static final double SPEED_PIXELS_PER_SECOND = 400.0;
-    private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
+    public double SPEED_PIXELS_PER_SECOND = 320.0;
+    private double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
     private static final int DAMAGE_DELAY = 30;
     private static final float SPRITE_WIDTH = 95;
     private static final float SPRITE_HEIGHT = 167;
@@ -183,6 +183,14 @@ public class Knight extends Player {
         attackPower += point;
     }
 
+    public void plusSpeed(int point) {
+        SPEED_PIXELS_PER_SECOND += point;
+    }
+
+    public double getSpeed() {
+        return SPEED_PIXELS_PER_SECOND;
+    }
+
     @Override
     public void useSkill() {
         long currentTime = System.currentTimeMillis();
@@ -225,4 +233,3 @@ public class Knight extends Player {
         }
     }
 }
-
