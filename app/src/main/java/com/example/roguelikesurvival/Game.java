@@ -259,6 +259,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (!selectItem.isLevelUp() && !pauseMenu.isGamePauseMenu()) {
             joystick.update();
             player.update();
+            skillButton.update();
 
             enemySpawn.update(camera, expBar);
             spellSpawn.update(camera, expBar);
