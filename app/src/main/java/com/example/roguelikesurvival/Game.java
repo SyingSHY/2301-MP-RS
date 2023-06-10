@@ -43,6 +43,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private int skillButtonPointerId = -1;
     private int gamePauseButtonPointerId = -2;
     public int numberOfSpellsToCast = 0;
+    private int monsterKillCount = 0;
     private Performance performance;
     private Camera camera;
     private InfiniteBackground background;
@@ -84,6 +85,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     public void onGameGiveupButtonPressed() {
         enemyList.clear(); // enemy 초기화 하도록 변경
         Intent intent = new Intent(getContext(), ReStart.class);
+        intent.putExtra("playtime_minute", gameTimer.getMinute());
+        intent.putExtra("playtime_second", gameTimer.getSecond());
+        intent.putExtra("play_killCount", getMonsterKillCount());
+        intent.putExtra("play_levelCount", player.getLevel());
+
         getContext().startActivity(intent);
         ((Activity) getContext()).finish();
     }
@@ -281,9 +287,22 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (player.getHealthPoint() <= 0) {
             enemyList.clear(); // enemy 초기화 하도록 변경
             Intent intent = new Intent(getContext(), ReStart.class);
+            intent.putExtra("playtime_minute", gameTimer.getMinute());
+            intent.putExtra("playtime_second", gameTimer.getSecond());
+            intent.putExtra("play_killCount", getMonsterKillCount());
+            intent.putExtra("play_levelCount", player.getLevel());
+
             getContext().startActivity(intent);
             ((Activity) getContext()).finish();
         }
+    }
+
+    public int getMonsterKillCount() {
+        return monsterKillCount;
+    }
+
+    public void setMonsterKillCount() {
+        this.monsterKillCount = monsterKillCount + 1;
     }
 
     public void pause() {

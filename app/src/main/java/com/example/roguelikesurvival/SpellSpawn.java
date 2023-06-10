@@ -65,6 +65,7 @@ public class SpellSpawn {
                     //체력 0이하면 몬스터 제거
                     if (enemy.getHealthPoint() <= 0) {
                         iteratorEnemy.remove();
+                        game.setMonsterKillCount();
                         expBar.plusExpPoint(1);
                     }
                 }
@@ -116,6 +117,7 @@ public class SpellSpawn {
                     //체력 0이하면 몬스터 제거
                     if (enemy.getHealthPoint() <= 0) {
                         iteratorEnemy.remove();
+                        game.setMonsterKillCount();
                         expBar.plusExpPoint(1);
                     }
                 }
@@ -144,6 +146,7 @@ public class SpellSpawn {
                 //체력 0이하면 몬스터 제거
                 if (enemy.getHealthPoint() <= 0) {
                     iteratorEnemy.remove();
+                    game.setMonsterKillCount();
                     expBar.plusExpPoint(1);
                 }
             }
