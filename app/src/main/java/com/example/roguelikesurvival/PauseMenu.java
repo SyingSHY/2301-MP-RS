@@ -22,18 +22,17 @@ import java.util.Random;
 public class PauseMenu {
 
     private static final float BACGROUND_SPRITE_WIDTH = 748;
-    private static final float BACKGROUND_SPRITE_HEIGHT = 917;
+    private static final float BACKGROUND_SPRITE_HEIGHT = 688;
     private static final float BORDER_SPRITE_WIDTH = 574;
     private static final float BORDER_SPRITE_HEIGHT = 169;
-    private static final int NUMBER_OF_ITEMS = 4;
+    private static final int NUMBER_OF_OPTIONS = 2;
     private float selectPosX;
     private float firstSelectPosY;
     private float secondSelectPosY;
-    private float thirdSelectPosY;
     private Context context;
     private Player player;
     private Bitmap backgroudBitmap = null;
-    private Bitmap[] itemBitmap = new Bitmap[NUMBER_OF_ITEMS];
+    private Bitmap[] optionBitmap = new Bitmap[NUMBER_OF_OPTIONS];
     boolean gamePauseMenu = false;
     private int color;
     private Paint pauseMenuTitle;
@@ -59,34 +58,29 @@ public class PauseMenu {
 
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
         bitmapOptions.inScaled = false;
-        backgroudBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.select_item_background, bitmapOptions);
-        itemBitmap[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_resume_select, bitmapOptions);
-        itemBitmap[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_settings_select, bitmapOptions);
-        itemBitmap[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_game_giveup_select, bitmapOptions);
-        itemBitmap[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_blank_select, bitmapOptions);
+        backgroudBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.temporary_pause_background, bitmapOptions);
+        optionBitmap[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_resume_select, bitmapOptions);
+        optionBitmap[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.gui_game_giveup_select, bitmapOptions);
     }
 
     public void draw(Canvas canvas, Camera camera) {
         // 일시정지 메뉴 위치 설정
         selectPosX = (float) camera.gameToScreenCoordinateX(player.getPositionX()) - (BORDER_SPRITE_WIDTH / 2) - 3;
-        firstSelectPosY = (float) camera.gameToScreenCoordinateY(player.getPositionY()) - (BORDER_SPRITE_HEIGHT / 2) - 120;
-        secondSelectPosY = (float) camera.gameToScreenCoordinateY(player.getPositionY()) - (BORDER_SPRITE_HEIGHT / 2) + 70;
-        thirdSelectPosY = (float) camera.gameToScreenCoordinateY(player.getPositionY()) - (BORDER_SPRITE_HEIGHT / 2) + 260;
+        firstSelectPosY = (float) camera.gameToScreenCoordinateY(player.getPositionY()) - (BORDER_SPRITE_HEIGHT / 2) - 20;
+        secondSelectPosY = (float) camera.gameToScreenCoordinateY(player.getPositionY()) - (BORDER_SPRITE_HEIGHT / 2) + 170;
 
         // 일시정지 메뉴 배경 draw
         canvas.drawBitmap(backgroudBitmap, (float) camera.gameToScreenCoordinateX(player.getPositionX()) - (BACGROUND_SPRITE_WIDTH / 2),
                 (float) camera.gameToScreenCoordinateY(player.getPositionY()) - (BACKGROUND_SPRITE_HEIGHT / 2), null);
 
         // 일시정지 메뉴 버튼 Draw
-        canvas.drawBitmap(itemBitmap[0], selectPosX, firstSelectPosY, null);
-        canvas.drawBitmap(itemBitmap[1], selectPosX, secondSelectPosY, null);
-        canvas.drawBitmap(itemBitmap[2], selectPosX, thirdSelectPosY, null);
+        canvas.drawBitmap(optionBitmap[0], selectPosX, firstSelectPosY, null);
+        canvas.drawBitmap(optionBitmap[1], selectPosX, secondSelectPosY, null);
 
         // 일시정지 메뉴 텍스트 Draw
-        canvas.drawText("게임 일시정지됨", selectPosX + 90, firstSelectPosY - 90, pauseMenuTitle);
-        canvas.drawText("게임 재개", selectPosX + 160, firstSelectPosY + 95, name);
-        canvas.drawText("게임 옵션", selectPosX + 160, secondSelectPosY + 95, name);
-        canvas.drawText("게임 포기", selectPosX + 160, thirdSelectPosY + 95, name);
+        canvas.drawText("게임 일시정지됨", selectPosX + 90, firstSelectPosY - 80, pauseMenuTitle);
+        canvas.drawText("게임 재개", selectPosX + 160, firstSelectPosY + 100, name);
+        canvas.drawText("게임 포기", selectPosX + 160, secondSelectPosY + 100, name);
     }
 
     public void update(){
@@ -118,15 +112,6 @@ public class PauseMenu {
         if((touchPosX > selectPosX && touchPosX < (selectPosX + BORDER_SPRITE_WIDTH))
                 && (touchPosY > secondSelectPosY && touchPosY < (secondSelectPosY + BORDER_SPRITE_HEIGHT))){
             // 옵션 메뉴 활성화
-            return true;
-        }
-        else return  false;
-    }
-
-    public boolean isThirdSelectPressed(double touchPosX, double touchPosY) {
-        if((touchPosX > selectPosX && touchPosX < (selectPosX + BORDER_SPRITE_WIDTH))
-                && (touchPosY > thirdSelectPosY && touchPosY < (thirdSelectPosY + BORDER_SPRITE_HEIGHT))){
-            // 플레이어가 게임 포기
             return true;
         }
         else return  false;

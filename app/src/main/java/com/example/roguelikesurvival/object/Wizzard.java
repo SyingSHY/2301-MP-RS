@@ -22,16 +22,16 @@ import java.util.List;
 import java.util.Map;
 
 public class Wizzard extends Player {
-    public double SPEED_PIXELS_PER_SECOND = 320.0;
+    public double SPEED_PIXELS_PER_SECOND = 350.0;
     private double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
     private static final int DAMAGE_DELAY = 30;
     private static final float SPRITE_WIDTH = 95;
     private static final float SPRITE_HEIGHT = 167;
     private final Joystick joystick;
     private HealthBar healthBar;
-    private int maxHealthPoint = 10;
+    private int maxHealthPoint = 5;
     private int healthPoint;
-    private int attackPower = 1;
+    private int attackPower = 3;
     private Bitmap[] bitmap = new Bitmap[5];
     private Bitmap[] bitmapL = new Bitmap[5];
     private MoveState moveState = MoveState.NOT_MOVING;

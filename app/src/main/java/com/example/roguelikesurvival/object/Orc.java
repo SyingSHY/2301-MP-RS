@@ -16,7 +16,7 @@ import com.example.roguelikesurvival.SelectItem;
 import java.util.List;
 
 public class Orc extends Enemy {
-    private static final double SPEED_PIXELS_PER_SECOND = 70;
+    private static final double SPEED_PIXELS_PER_SECOND = 50;
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
     private static final double AVOID_POWER = 5;
 
@@ -27,7 +27,7 @@ public class Orc extends Enemy {
     private static double updateUntilNextSpawn = UPDATE_PER_SPAWN;
     private static final float SPRITE_WIDTH = 95;
     private static final float SPRITE_HEIGHT = 119;
-    private int healthPoint = 1;
+    private int healthPoint = 5;
     private boolean hitImage = false;
     private boolean switchAvoid = false;
     private int switchAvoidCount = 30;

@@ -45,7 +45,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private int gamePauseButtonPointerId = -2;
     public int numberOfSpellsToCast = 0;
     private int monsterKillCount = 0;
-    private static final int GAME_CLEAR_TIME_MINUTE = 1;
+    private static final int GAME_CLEAR_TIME_MINUTE = 15;
     public static boolean isGameOver = false;
     private Performance performance;
     private Camera camera;
@@ -111,7 +111,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         //게임 패널 초기화
         performance = new Performance(context, gameLoop);
         joystick = new Joystick(170, 900, 100, 60);
-        skillButton = new SkillButton(1600, 880, 90, this);
+        skillButton = new SkillButton(1700, 900, 60, this);
         gamePauseButton = new GamePauseButton(context, 1800, 60, this);
 
         //오브젝트 초기설정
@@ -187,8 +187,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                     if (pauseMenu.isFirstSelectPressed((double) event.getX(), (double) event.getY())) {
                         pauseMenu.setGamePauseMenu(false);
                     } else if (pauseMenu.isSecondSelectPressed((double) event.getX(), (double) event.getY())) {
-                        pauseMenu.setGamePauseMenu(false);
-                    } else if (pauseMenu.isThirdSelectPressed((double) event.getX(), (double) event.getY())) {
                         onGameGiveupButtonPressed();
                         pauseMenu.setGamePauseMenu(false);
                     }
