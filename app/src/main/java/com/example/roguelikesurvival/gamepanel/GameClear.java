@@ -67,6 +67,9 @@ public class GameClear extends AppCompatActivity{
             editor.putInt("bestKillCount", killCount_round);
         }
         // 전체 통계 갱신
+        int total_playedGame = sharedPref.getInt("playedGame", 0);
+        int total_playedWin = sharedPref.getInt("playedWin", 0);
+
         playTime_minute_total = sharedPref.getInt("totalMinute", 0);
         playTime_second_total = sharedPref.getInt("totalSecond", 0);
         killCount_total = sharedPref.getInt("totalKillCount", 0);
@@ -77,6 +80,9 @@ public class GameClear extends AppCompatActivity{
         editor.putInt("totalSecond", total_time % 60);
         editor.putInt("totalLevel", playerLevel_total + playerLevel);
         editor.putInt("totalKillCount", killCount_total + killCount_round);
+
+        editor.putInt("playedGame", total_playedGame + 1);
+        editor.putInt("playedWin", total_playedWin + 1);
 
         // 전체 기록 작성 및 확인 완료, 갱신 실행
         editor.commit();

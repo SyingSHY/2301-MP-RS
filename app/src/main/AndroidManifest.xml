@@ -36,6 +36,11 @@
             android:exported="true"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.RoguelikeSurvival" />
+        <activity
+            android:name=".gamepanel.GameStatistics"
+            android:exported="true"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.RoguelikeSurvival" />
     </application>
 
 </manifest>

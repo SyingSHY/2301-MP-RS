@@ -32,6 +32,11 @@ public class StartUp extends AppCompatActivity {
         finish();
     }
 
+    public void statisticsGame(View view) {
+        startActivity(new Intent(this, GameStatistics.class));
+        finish();
+    }
+
     public void exitApp(View view){
         // 종료 버튼
         System.exit(0);

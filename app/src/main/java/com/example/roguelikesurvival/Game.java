@@ -45,7 +45,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private int gamePauseButtonPointerId = -2;
     public int numberOfSpellsToCast = 0;
     private int monsterKillCount = 0;
-    private static final int GAME_CLEAR_TIME_MINUTE = 15;
+    private static final int GAME_CLEAR_TIME_MINUTE = 1;
     public static boolean isGameOver = false;
     private Performance performance;
     private Camera camera;
