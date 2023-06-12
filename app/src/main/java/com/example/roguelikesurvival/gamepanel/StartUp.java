@@ -31,4 +31,9 @@ public class StartUp extends AppCompatActivity {
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
+
+    public void exitApp(View view){
+        // 종료 버튼
+        System.exit(0);
+    }
 }
