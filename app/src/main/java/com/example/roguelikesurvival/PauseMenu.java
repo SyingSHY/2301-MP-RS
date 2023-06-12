@@ -35,8 +35,10 @@ public class PauseMenu {
     private Bitmap[] optionBitmap = new Bitmap[NUMBER_OF_OPTIONS];
     boolean gamePauseMenu = false;
     private int color;
+    private int colorW;
     private Paint pauseMenuTitle;
     private Paint name;
+    private Paint nameW;
     private Game game;
 
 
@@ -45,6 +47,7 @@ public class PauseMenu {
         this.context = context;
         this.player = player;
         color = ContextCompat.getColor(context, R.color.black);
+        colorW = ContextCompat.getColor(context, R.color.white);
 
         pauseMenuTitle = new Paint();
         pauseMenuTitle.setColor(color);
@@ -55,6 +58,11 @@ public class PauseMenu {
         name.setColor(color);
         name.setTextSize(50);
         name.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+
+        nameW = new Paint();
+        nameW.setColor(colorW);
+        nameW.setTextSize(50);
+        nameW.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
         bitmapOptions.inScaled = false;
@@ -80,7 +88,7 @@ public class PauseMenu {
         // 일시정지 메뉴 텍스트 Draw
         canvas.drawText("게임 일시정지됨", selectPosX + 90, firstSelectPosY - 80, pauseMenuTitle);
         canvas.drawText("게임 재개", selectPosX + 160, firstSelectPosY + 100, name);
-        canvas.drawText("게임 포기", selectPosX + 160, secondSelectPosY + 100, name);
+        canvas.drawText("게임 포기", selectPosX + 160, secondSelectPosY + 100, nameW);
     }
 
     public void update(){
