@@ -68,7 +68,7 @@ public class Goblin extends Enemy {
 
     //설정한 시간간격마다 true를 return하여 스폰준비
     public boolean readyToSpawn() {
-        if (updateUntilNextSpawn <= 0) {
+        if (updateUntilNextSpawn <= 0 && !Game.isGameOver) {
             updateUntilNextSpawn += UPDATE_PER_SPAWN;
             return true;
         } else {
@@ -124,6 +124,25 @@ public class Goblin extends Enemy {
 
     @Override
     public void update() {
+        // 게임 클리어 상태 확인
+        if (Game.isGameOver) {
+            // 게임 클리어 = 돔황챠~~~
+            // 아래 코드 재사용하되, 플레이어에게서 멀어지도록!
+            double distanceToPlayerX = player.getPositionX() - positionX;
+            double distanceToPlayerY = player.getPositionY() - positionY;
+            double distanceToPlayer = GameObject.getDistanceBetweenObject(this, player);
+
+            double directionX = (distanceToPlayerX / distanceToPlayer) * -1;
+            double directionY = (distanceToPlayerY / distanceToPlayer) * -1;
+
+            velocityX = (directionX * MAX_SPEED * 4);
+            velocityY = (directionY * MAX_SPEED * 4);
+
+            positionX += velocityX;
+            positionY += velocityY;
+            return;
+        }
+
         //각 enemy 객체를 돌면서 거리를 구하고 거리에 반비례 하는 Avoidance Vector 계산
         //this.game = new Game(super.context);
         List<Enemy> enemyList = Game.enemyList;

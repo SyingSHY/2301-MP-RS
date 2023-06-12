@@ -13,6 +13,7 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 
 import com.example.roguelikesurvival.gamepanel.ExpBar;
+import com.example.roguelikesurvival.gamepanel.GameClear;
 import com.example.roguelikesurvival.gamepanel.GamePauseButton;
 import com.example.roguelikesurvival.gamepanel.InfiniteBackground;
 import com.example.roguelikesurvival.gamepanel.Joystick;
@@ -44,6 +45,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private int gamePauseButtonPointerId = -2;
     public int numberOfSpellsToCast = 0;
     private int monsterKillCount = 0;
+    private static final int GAME_CLEAR_TIME_MINUTE = 1;
+    public static boolean isGameOver = false;
     private Performance performance;
     private Camera camera;
     private InfiniteBackground background;
@@ -274,6 +277,24 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
             if (player.getHealthPoint() <= 0) {
                 checkHP();
+            }
+
+            // Game Clear 체크
+            if (gameTimer.getMinute() == GAME_CLEAR_TIME_MINUTE) {
+                // Game Clear 처리 개시
+                isGameOver = true;
+                // 몬스터들 도망간 후 시간 3초 경과
+                if (gameTimer.getSecond() == 3) {
+                    enemyList.clear(); // enemy 초기화 하도록 변경
+                    Intent intent = new Intent(getContext(), GameClear.class);
+                    intent.putExtra("playtime_minute", GAME_CLEAR_TIME_MINUTE);
+                    intent.putExtra("playtime_second", 0);
+                    intent.putExtra("play_killCount", getMonsterKillCount());
+                    intent.putExtra("play_levelCount", player.getLevel());
+
+                    getContext().startActivity(intent);
+                    ((Activity) getContext()).finish();
+                }
             }
 
             background.update(camera);
