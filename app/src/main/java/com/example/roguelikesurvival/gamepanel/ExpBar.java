@@ -3,10 +3,13 @@ package com.example.roguelikesurvival.gamepanel;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.view.Display;
+import android.view.WindowManager;
 
 import androidx.core.content.ContextCompat;
 
 import com.example.roguelikesurvival.Camera;
+import com.example.roguelikesurvival.MainActivity;
 import com.example.roguelikesurvival.R;
 import com.example.roguelikesurvival.SelectItem;
 import com.example.roguelikesurvival.object.Player;
@@ -24,7 +27,7 @@ public class ExpBar {
         this.player = player;
         this.context = context;
         this.selectItem = selectItem;
-        this.width = 1920;
+        this.width = MainActivity.displayWidth;
         this.height = 30;
 
         this.borderPaint = new Paint();
@@ -67,7 +70,7 @@ public class ExpBar {
 
     public void update(){
         if(maxExpPoint <= expPoint){
-            maxExpPoint = maxExpPoint * 2;
+            maxExpPoint = (maxExpPoint * 2) - (maxExpPoint / 2);
             expPoint = 0;
             player.levelUp();
             selectItem.levelUp();

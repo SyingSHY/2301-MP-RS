@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import com.example.roguelikesurvival.PauseMenu;
 import com.example.roguelikesurvival.R;
 import com.example.roguelikesurvival.SelectItem;
+import com.example.roguelikesurvival.Utils;
 
 public class GameTimer {
     private Context context;
@@ -57,7 +58,7 @@ public class GameTimer {
         paint.setColor(color);
         paint.setTextSize(50);
         paint.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        canvas.drawText("시간: " + minute + ":" + second, 800, 90, paint);
+        canvas.drawText("시간: " + minute + ":" + second, Utils.getRelativeDisplayWidth(850), Utils.getRelativeDisplayHeight(90), paint);
     }
 
     public int getMinute(){

@@ -52,13 +52,13 @@ public class EnemySpawn {
     }
 
     public void positionUpOrDown() {
-        spawnPositionX = (ThreadLocalRandom.current().nextInt(2) * 2 - 1) * (Math.random() * 1000);
-        spawnPositionY = (ThreadLocalRandom.current().nextInt(2) * 2 - 1) * ((Math.random() * 100) + 600);
+        spawnPositionX = (ThreadLocalRandom.current().nextInt(2) * 2 - 1) * (Math.random() * (MainActivity.displayWidth / 2f));
+        spawnPositionY = (ThreadLocalRandom.current().nextInt(2) * 2 - 1) * ((Math.random() * 100) + (MainActivity.displayHeight / 2f));
     }
 
     public void positionLeftOrRight() {
-        spawnPositionX = (ThreadLocalRandom.current().nextInt(2) * 2 - 1) * ((Math.random() * 100) + 1000);
-        spawnPositionY = (ThreadLocalRandom.current().nextInt(2) * 2 - 1) * (Math.random() * 550);
+        spawnPositionX = (ThreadLocalRandom.current().nextInt(2) * 2 - 1) * ((Math.random() * 100) + (MainActivity.displayWidth / 2f));
+        spawnPositionY = (ThreadLocalRandom.current().nextInt(2) * 2 - 1) * (Math.random() * (MainActivity.displayHeight / 2f));
     }
 
     public void setRandomPosition() {

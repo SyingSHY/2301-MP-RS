@@ -1,8 +1,10 @@
 package com.example.roguelikesurvival;
 
+import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.view.Display;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.ImageView;
@@ -20,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
 
     private Game game;
 
+    public static int displayWidth;
+    public static int displayHeight;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +35,12 @@ public class MainActivity extends AppCompatActivity {
         selectAnimation = (AnimationDrawable) selectImage.getBackground();
 
         selectAnimation.start();
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getRealSize(size); // or getSize(size)
+        displayWidth = size.x;
+        displayHeight = size.y;
     }
 
     public void onClickKnight(View target) {

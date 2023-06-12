@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -27,6 +28,7 @@ import com.example.roguelikesurvival.object.Knight;
 import com.example.roguelikesurvival.object.Player;
 import com.example.roguelikesurvival.object.Spell;
 import com.example.roguelikesurvival.object.Wizzard;
+import com.example.roguelikesurvival.Utils;
 import com.example.roguelikesurvival.object.item.BasicAttack;
 
 import java.util.ArrayList;
@@ -45,7 +47,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private int gamePauseButtonPointerId = -2;
     public int numberOfSpellsToCast = 0;
     private int monsterKillCount = 0;
-    private static final int GAME_CLEAR_TIME_MINUTE = 1;
+    private static final int GAME_CLEAR_TIME_MINUTE = 15;
     public static boolean isGameOver = false;
     private Performance performance;
     private Camera camera;
@@ -110,9 +112,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         //게임 패널 초기화
         performance = new Performance(context, gameLoop);
-        joystick = new Joystick(170, 900, 100, 60);
-        skillButton = new SkillButton(1700, 900, 60, this);
-        gamePauseButton = new GamePauseButton(context, 1800, 60, this);
+        joystick = new Joystick(Utils.getRelativeDisplayWidth(170), Utils.getRelativeDisplayHeight(900), 100, 60);
+        skillButton = new SkillButton(Utils.getRelativeDisplayWidth(1700), Utils.getRelativeDisplayHeight(900), 60, this);
+        gamePauseButton = new GamePauseButton(context, Utils.getRelativeDisplayWidth(1800), Utils.getRelativeDisplayHeight(60), this);
 
         //오브젝트 초기설정
         if (jobs == 0)
