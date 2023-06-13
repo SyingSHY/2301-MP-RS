@@ -18,6 +18,7 @@ import com.example.roguelikesurvival.MainActivity;
 import com.example.roguelikesurvival.R;
 
 public class GameStatistics extends AppCompatActivity {
+    AnimationDrawable statisticsAnimation;
 
     private Context context;
 
@@ -29,9 +30,9 @@ public class GameStatistics extends AppCompatActivity {
 
         ImageView titleImage = (ImageView) findViewById(R.id.title_image);
         titleImage.setBackgroundResource(R.drawable.statistics_background);
-//        titleAnimation = (AnimationDrawable) titleImage.getBackground();
-//
-//        titleAnimation.start();
+        statisticsAnimation = (AnimationDrawable) titleImage.getBackground();
+
+        statisticsAnimation.start();
 
         // SharedPreferences 기록 읽어 들이기
         SharedPreferences sharedPref = getSharedPreferences("UserRecord", MODE_PRIVATE);
