@@ -75,32 +75,32 @@ public class EnemySpawn {
             game.enemyList.add(new Goblin(game.getContext(), player, camera, spawnPositionX, spawnPositionY, 30));
         }
         //오크 스폰
-        if (orc.readyToSpawn()) {
+        if (gameTimer.getMinute() >= 1 && orc.readyToSpawn()) {
             setRandomPosition();
             game.enemyList.add(new Orc(game.getContext(), player, camera, spawnPositionX, spawnPositionY, 30));
         }
         //임프 스폰
-        if (imp.readyToSpawn()) {
+        if (gameTimer.getMinute() >= 3 && imp.readyToSpawn()) {
             setRandomPosition();
             game.enemyList.add(new Imp(game.getContext(), player, camera, spawnPositionX, spawnPositionY, 30));
         }
         //진흙 스폰
-        if (muddy.readyToSpawn()) {
+        if (gameTimer.getMinute() >= 2 && muddy.readyToSpawn()) {
             setRandomPosition();
             game.enemyList.add(new Muddy(game.getContext(), player, camera, spawnPositionX, spawnPositionY, 30));
         }
         //좀비 스폰
-        if (bigZombie.readyToSpawn()) {
+        if (gameTimer.getMinute() >= 4 && bigZombie.readyToSpawn()) {
             setRandomPosition();
             game.enemyList.add(new BigZombie(game.getContext(), player, camera, spawnPositionX, spawnPositionY, 45));
         }
         //chort 스폰
-        if (chort.readyToSpawn()) {
+        if (gameTimer.getMinute() >= 7 && chort.readyToSpawn()) {
             setRandomPosition();
             game.enemyList.add(new Chort(game.getContext(), player, camera, spawnPositionX, spawnPositionY, 35));
         }
         //오거 스폰
-        if (ogre.readyToSpawn()) {
+        if (gameTimer.getMinute() >= 5 && ogre.readyToSpawn()) {
             setRandomPosition();
             game.enemyList.add(new Ogre(game.getContext(), player, camera, spawnPositionX, spawnPositionY, 35));
         }
