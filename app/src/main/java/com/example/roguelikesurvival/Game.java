@@ -114,7 +114,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         performance = new Performance(context, gameLoop);
         joystick = new Joystick(Utils.getRelativeDisplayWidth(170), Utils.getRelativeDisplayHeight(900), 100, 60);
         skillButton = new SkillButton(Utils.getRelativeDisplayWidth(1700), Utils.getRelativeDisplayHeight(900), 60, this);
-        gamePauseButton = new GamePauseButton(context, Utils.getRelativeDisplayWidth(1800), Utils.getRelativeDisplayHeight(60), this);
+        gamePauseButton = new GamePauseButton(context, Utils.getRelativeDisplayWidth(1700), Utils.getRelativeDisplayHeight(60), this);
 
         //오브젝트 초기설정
         if (jobs == 0)
