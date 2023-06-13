@@ -183,6 +183,13 @@ public class Goblin extends Enemy {
         double directionX = distanceToPlayerX / distanceToPlayer;
         double directionY = distanceToPlayerY / distanceToPlayer;
 
+        if (isFrozen() == false) {
+            if (directionX > 0)
+                dir = 0;
+            else
+                dir = 1;
+        }
+
         //플레이어쪽으로 적 이동시키기
         if (distanceToPlayer > 0 && isFrozen() == false) {
             velocityX = (directionX * MAX_SPEED + avoidanceX * AVOID_POWER);
